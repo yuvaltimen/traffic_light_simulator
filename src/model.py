@@ -9,6 +9,10 @@ class WalkerState:
     x: float
     y: float
     direction: str  # "east", "south", "west", "north"
+    current_street_idx: int
+    current_avenue_idx: int
+    target_street_idx: int
+    target_avenue_idx: int
 
 @dataclass(frozen=True)
 class SimulationState:
@@ -77,6 +81,11 @@ _RIGHT_TURN = {
     "north": "east",
 }
 
+_ZIG_ZAG = {
+    "east": "south",
+    "south": "east"
+}
+
 _DIR_DELTA = {
     "east":  (0, +1),
     "west":  (0, -1),
@@ -104,18 +113,18 @@ class Walker:
             return j, i
         return None
 
-    def _pick_next_direction(self, start_dir: str) -> str:
-        d = _RIGHT_TURN[start_dir]
+    def _pick_next_direction(self, direction_dict: dict, start_dir: str) -> str:
+        d = direction_dict[start_dir]
         for _ in range(4):
             if self._neighbor_indices(d) is not None:
                 return d
-            d = _RIGHT_TURN[d]
+            d = direction_dict[d]
         return start_dir
 
     def _set_next_target(self):
         nxt = self._neighbor_indices(self.direction)
         if nxt is None:
-            self.direction = self._pick_next_direction(self.direction)
+            self.direction = self._pick_next_direction(_ZIG_ZAG, self.direction)
             nxt = self._neighbor_indices(self.direction)
             if nxt is None:
                 self.target = (self.street_idx, self.avenue_idx)
@@ -132,7 +141,7 @@ class Walker:
         if self.progress >= 1.0:
             # Snap to intersection
             self.street_idx, self.avenue_idx = self.target
-            self.direction = self._pick_next_direction(self.direction)
+            self.direction = self._pick_next_direction(_ZIG_ZAG, self.direction)
             self._set_next_target()
 
     def to_state(self) -> WalkerState:
@@ -142,7 +151,7 @@ class Walker:
         x1, y1 = self.grid.intersection_xy(j1, i1)
         x = x0 + (x1 - x0) * self.progress
         y = y0 + (y1 - y0) * self.progress
-        return WalkerState(self.id, x, y, self.direction)
+        return WalkerState(self.id, x, y, self.direction, j0, i0, j1, i1)
 
 
 # ------------------- Simulation -------------------
