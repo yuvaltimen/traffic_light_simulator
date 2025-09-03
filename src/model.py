@@ -50,8 +50,8 @@ class CityGrid:
         self.avenue_spacing = avenue_block_length + avenue_crosswalk_length
 
         # total dimensions
-        self.width = num_avenues * self.avenue_spacing
-        self.height = num_streets * self.street_spacing
+        self.width = num_avenues * self.avenue_spacing + avenue_block_length
+        self.height = num_streets * self.street_spacing + street_block_length
 
     # Drawing helpers (edges of crosswalks)
     def avenue_positions(self):

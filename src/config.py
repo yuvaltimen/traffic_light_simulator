@@ -17,12 +17,12 @@ class Config:
     frame_rate: int = 60
 
     # Simulation world
-    num_streets: int = 6
-    num_avenues: int = 10
-    street_block_length: float = 20.0
-    street_crosswalk_length: float = 8.0
-    avenue_block_length: float = 30.0
-    avenue_crosswalk_length: float = 8.0
+    num_streets: int = 10
+    num_avenues: int = 6
+    street_block_length: float = 50.0
+    street_crosswalk_length: float = 20.0
+    avenue_block_length: float = 70.0
+    avenue_crosswalk_length: float = 30.0
 
     # Agents
     walker_speed: float = 60.0

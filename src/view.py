@@ -27,7 +27,7 @@ def draw_grid(screen, grid: CityGrid, viewport, color=(0, 0, 0)):
 
         # Draw avenue label above the top
         label = font.render(f"Ave {idx+1}", True, color)
-        label_rect = label.get_rect(center=( (lx+rx)//2, 10 ))
+        label_rect = label.get_rect(center=( (lx+rx)//2, grid.avenue_crosswalk_length ))
         screen.blit(label, label_rect)
 
     # Streets (horizontal lines)
