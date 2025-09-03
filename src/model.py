@@ -21,69 +21,62 @@ class SimulationState:
 # ------------------------------ City grid model ------------------------------
 
 class CityGrid:
-    """
-    Grid in world units (e.g., meters). We model a repeating pattern:
-      [block][crosswalk][block][crosswalk]... [block]
-    along both X (avenues) and Y (streets).
+    def __init__(self, num_streets, num_avenues,
+                 street_block_length, street_crosswalk_length,
+                 avenue_block_length, avenue_crosswalk_length):
 
-    There are:
-      - num_avenues vertical centerlines (crosswalk centers) indexed [0..num_avenues-1]
-      - num_streets  horizontal centerlines (crosswalk centers) indexed [0..num_streets-1]
-    """
-
-    def __init__(
-        self,
-        num_streets: int,
-        num_avenues: int,
-        street_block_length: float,
-        street_crosswalk_length: float,
-        avenue_block_length: float,
-        avenue_crosswalk_length: float,
-    ):
         self.num_streets = num_streets
         self.num_avenues = num_avenues
 
-        # Keep the atomic pieces for precise center calculations
         self.street_block_length = street_block_length
         self.street_crosswalk_length = street_crosswalk_length
         self.avenue_block_length = avenue_block_length
         self.avenue_crosswalk_length = avenue_crosswalk_length
 
-        # Distance between consecutive street centerlines (top->bottom)
         self.street_spacing = street_block_length + street_crosswalk_length
-        # Distance between consecutive avenue centerlines (left->right)
         self.avenue_spacing = avenue_block_length + avenue_crosswalk_length
 
-        # Full extents (include a block on both ends)
-        self.width = (num_avenues + 1) * avenue_block_length + num_avenues * avenue_crosswalk_length
-        self.height = (num_streets + 1) * street_block_length + num_streets * street_crosswalk_length
+        self.width = num_avenues * self.avenue_spacing
+        self.height = num_streets * self.street_spacing
 
-    # ---- Crosswalk centerlines (what we draw and what walkers follow) ----
+    # --- Helpers for drawing ---
 
-    def avenue_center_x(self, i: int) -> float:
-        """X position of avenue centerline i (vertical line that pedestrians walk along)."""
-        # start at left margin block, then go i spacings, then center of crosswalk
-        left_of_crosswalk = self.avenue_block_length + i * (self.avenue_block_length + self.avenue_crosswalk_length)
-        return left_of_crosswalk + 0.5 * self.avenue_crosswalk_length
-
-    def street_center_y(self, j: int) -> float:
-        """Y position of street centerline j (horizontal line that pedestrians walk along)."""
-        top_of_crosswalk = self.street_block_length + j * (self.street_block_length + self.street_crosswalk_length)
-        return top_of_crosswalk + 0.5 * self.street_crosswalk_length
-
-    def avenue_centerlines(self):
-        """Yield all avenue centerline X positions, left → right."""
+    def avenue_positions(self):
+        """
+        Yield x-positions for left and right edges of avenues (blocks + crosswalks).
+        """
         for i in range(self.num_avenues):
-            yield self.avenue_center_x(i)
+            left = i * self.avenue_spacing + self.avenue_block_length
+            right = left + self.avenue_crosswalk_length
+            yield left, right
 
-    def street_centerlines(self):
-        """Yield all street centerline Y positions, top → bottom."""
+    def street_positions(self):
+        """
+        Yield y-positions for top and bottom edges of streets (blocks + crosswalks).
+        """
         for j in range(self.num_streets):
-            yield self.street_center_y(j)
+            top = j * self.street_spacing + self.street_block_length
+            bottom = top + self.street_crosswalk_length
+            yield top, bottom
 
-    def intersection_xy(self, street_idx: int, avenue_idx: int) -> Tuple[float, float]:
-        """World coords for the intersection of street j and avenue i (centerlines cross)."""
-        return self.avenue_center_x(avenue_idx), self.street_center_y(street_idx)
+    # --- Helpers for walkers (centerlines) ---
+
+    def avenue_center(self, idx: int) -> float:
+        """Return x coordinate of the centerline for an avenue idx."""
+        return idx * self.avenue_spacing + self.avenue_block_length + self.avenue_crosswalk_length / 2
+
+    def street_center(self, idx: int) -> float:
+        """Return y coordinate of the centerline for a street idx."""
+        return idx * self.street_spacing + self.street_block_length + self.street_crosswalk_length / 2
+
+    def intersection_xy(self, street_idx: int, avenue_idx: int) -> tuple[float, float]:
+        """
+        Return the (x, y) coordinate in *model units* of the intersection center
+        for a given street and avenue index.
+        """
+        x = avenue_idx * self.avenue_spacing + self.avenue_block_length + self.avenue_crosswalk_length / 2
+        y = street_idx * self.street_spacing + self.street_block_length + self.street_crosswalk_length / 2
+        return x, y
 
 
 # ------------------------------ Walker (agent) -------------------------------

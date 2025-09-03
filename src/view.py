@@ -18,16 +18,19 @@ class Viewport:
 
 
 def draw_grid(screen, grid: CityGrid, viewport: Viewport, color=(0, 0, 0)):
-    """Draw centerlines only (where walkers move)."""
-    # Avenues (vertical centerlines)
-    for x in grid.avenue_centerlines():
-        sx, _ = viewport.to_screen(x, 0)
-        pygame.draw.line(screen, color, (sx, 0), (sx, viewport.screen_height), 2)
+    # Avenues (vertical lines: left/right edges of crosswalks)
+    for left, right in grid.avenue_positions():
+        lx, _ = viewport.to_screen(left, 0)
+        rx, _ = viewport.to_screen(right, 0)
+        pygame.draw.line(screen, color, (lx, 0), (lx, viewport.screen_height), 2)
+        pygame.draw.line(screen, color, (rx, 0), (rx, viewport.screen_height), 2)
 
-    # Streets (horizontal centerlines)
-    for y in grid.street_centerlines():
-        _, sy = viewport.to_screen(0, y)
-        pygame.draw.line(screen, color, (0, sy), (viewport.screen_width, sy), 2)
+    # Streets (horizontal lines: top/bottom edges of crosswalks)
+    for top, bottom in grid.street_positions():
+        _, ty = viewport.to_screen(0, top)
+        _, by = viewport.to_screen(0, bottom)
+        pygame.draw.line(screen, color, (0, ty), (viewport.screen_width, ty), 2)
+        pygame.draw.line(screen, color, (0, by), (viewport.screen_width, by), 2)
 
 
 class Visualizer:
