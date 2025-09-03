@@ -1,0 +1,36 @@
+from dataclasses import dataclass
+from enum import Enum
+
+
+class OutputMode(str, Enum):
+    JSON = "json"
+    PYGAME = "pygame"
+    NONE = "none"   # headless (model only, no output)
+
+
+@dataclass
+class Config:
+    # Visualization
+    output_mode: OutputMode = OutputMode.PYGAME
+    screen_width: int = 800
+    screen_height: int = 800
+
+    # Simulation world
+    num_streets: int = 6
+    num_avenues: int = 10
+    street_block_length: float = 20.0
+    street_crosswalk_length: float = 8.0
+    avenue_block_length: float = 30.0
+    avenue_crosswalk_length: float = 8.0
+
+    # Agents
+    walker_speed: float = 10.0
+    num_walkers: int = 1
+
+    # Runtime
+    fps: int = 60
+    max_time: float | None = None  # None = run until quit, or set seconds
+
+
+def get_default_config() -> Config:
+    return Config()
