@@ -1,4 +1,6 @@
 import pygame
+
+from src.config import OutputMode
 from src.model import CityGrid, Walker, CitySimulation
 from src.view import Visualizer, Viewport
 
@@ -28,24 +30,27 @@ def run_simulation(cfg):
 
     sim = CitySimulation(grid, walkers)
 
-    # Setup Pygame
-    pygame.init()
-    screen = pygame.display.set_mode((cfg.screen_width, cfg.screen_height))
-    pygame.display.set_caption("City Simulation")
-    viewport = Viewport(grid.width, grid.height, cfg.screen_width, cfg.screen_height)
-    vis = Visualizer(screen, viewport)
-    clock = pygame.time.Clock()
-    running = True
+    if cfg.output_mode == OutputMode.JSON:
+        pass
+    elif cfg.output_mode == OutputMode.PYGAME:
+        # Setup Pygame
+        pygame.init()
+        screen = pygame.display.set_mode((cfg.screen_width, cfg.screen_height))
+        pygame.display.set_caption("City Simulation")
+        viewport = Viewport(grid.width, grid.height, cfg.screen_width, cfg.screen_height)
+        vis = Visualizer(screen, viewport)
+        clock = pygame.time.Clock()
+        running = True
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-        dt = 1 / cfg.frame_rate
-        state = sim.step(dt)
-        vis.draw(state, grid)
-        pygame.display.flip()
-        clock.tick(cfg.frame_rate)
+            dt = 1 / cfg.frame_rate
+            state = sim.step(dt)
+            vis.draw(state, grid)
+            pygame.display.flip()
+            clock.tick(cfg.frame_rate)
 
-    pygame.quit()
+        pygame.quit()

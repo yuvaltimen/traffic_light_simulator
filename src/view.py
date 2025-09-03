@@ -23,6 +23,8 @@ def draw_grid(screen, grid: CityGrid, viewport, color=(0, 0, 0)):
         pygame.draw.line(screen, color, (lx, 0), (lx, viewport.screen_height), 2)
         pygame.draw.line(screen, color, (rx, 0), (rx, viewport.screen_height), 2)
 
+        pygame.draw.rect(screen, (0, 0, 255), (lx, 0, grid.avenue_crosswalk_length, viewport.screen_height))
+
         # Draw avenue label above the top
         label = font.render(f"Ave {idx+1}", True, color)
         label_rect = label.get_rect(center=( (lx+rx)//2, 10 ))
@@ -34,6 +36,8 @@ def draw_grid(screen, grid: CityGrid, viewport, color=(0, 0, 0)):
         _, by = viewport.to_screen(0, bottom)
         pygame.draw.line(screen, color, (0, ty), (viewport.screen_width, ty), 2)
         pygame.draw.line(screen, color, (0, by), (viewport.screen_width, by), 2)
+
+        pygame.draw.rect(screen, (255, 255, 0), (0, ty, grid.street_crosswalk_length, viewport.screen_width))
 
         # Draw street label to the left
         label = font.render(f"St {idx+1}", True, color)

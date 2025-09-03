@@ -2,6 +2,11 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 # ------------------- State snapshots for the view -------------------
+@dataclass(frozen=True)
+class Location:
+    street_idx: int
+    avenue_idx: int
+    corner: str  # "east", "south", "west", "north"
 
 @dataclass(frozen=True)
 class WalkerState:
@@ -62,14 +67,20 @@ class CityGrid:
             yield top, bottom
 
     # Walkers helpers (centerlines)
-    def avenue_center(self, idx: int) -> float:
-        return idx * self.avenue_spacing + self.avenue_block_length + self.avenue_crosswalk_length / 2
+    def avenue_east(self, idx: int) -> float:
+        return idx * self.avenue_spacing + self.avenue_block_length
 
-    def street_center(self, idx: int) -> float:
-        return idx * self.street_spacing + self.street_block_length + self.street_crosswalk_length / 2
+    def avenue_west(self, idx: int) -> float:
+        return idx * self.avenue_spacing + self.avenue_block_length + self.avenue_crosswalk_length
+
+    def street_north(self, idx: int) -> float:
+        return idx * self.street_spacing + self.street_block_length
+
+    def street_south(self, idx: int) -> float:
+        return idx * self.street_spacing + self.street_block_length + self.street_crosswalk_length
 
     def intersection_xy(self, street_idx: int, avenue_idx: int) -> Tuple[float, float]:
-        return self.avenue_center(avenue_idx), self.street_center(street_idx)
+        return self.avenue_east(avenue_idx), self.street_north(street_idx)
 
 
 # ------------------- Walker -------------------
@@ -94,8 +105,13 @@ _DIR_DELTA = {
 }
 
 class Walker:
-    def __init__(self, walker_id: str, street_idx: int, avenue_idx: int,
-                 direction: str, speed: float, grid: CityGrid):
+    def __init__(self,
+                 walker_id: str,
+                 street_idx: int,
+                 avenue_idx: int,
+                 direction: str,
+                 speed: float,
+                 grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx
         self.avenue_idx = avenue_idx
@@ -128,10 +144,8 @@ class Walker:
             nxt = self._neighbor_indices(self.direction)
             if nxt is None:
                 self.target = (self.street_idx, self.avenue_idx)
-                self.segment_len = 1.0
                 return
         self.target = nxt
-        self.segment_len = 1.0
         self.progress = 0.0
 
     def update(self, dt: float):
@@ -147,6 +161,7 @@ class Walker:
     def to_state(self) -> WalkerState:
         j0, i0 = self.street_idx, self.avenue_idx
         j1, i1 = self.target
+
         x0, y0 = self.grid.intersection_xy(j0, i0)
         x1, y1 = self.grid.intersection_xy(j1, i1)
         x = x0 + (x1 - x0) * self.progress
