@@ -25,7 +25,9 @@ class Config:
 
     # Agents
     walker_speed: float = 10.0
+    walker_starting_direction: str = "east"
     num_walkers: int = 1
+
 
     # Runtime
     fps: int = 60

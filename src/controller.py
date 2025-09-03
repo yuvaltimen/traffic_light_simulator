@@ -16,9 +16,19 @@ def run_simulation(cfg: Config):
         avenue_block_length=cfg.avenue_block_length,
         avenue_crosswalk_length=cfg.avenue_crosswalk_length,
     )
+    # --- Model setup ---
+    walkers = [
+        Walker(
+            id=i,
+            street_idx=0,
+            avenue_idx=0,
+            direction="east",
+            speed=cfg.walker_speed,
+            grid=grid,
+        )
+        for i in range(cfg.num_walkers)
+    ]
 
-    walkers = [Walker(i, 0, 0, speed=cfg.walker_speed, grid=grid)
-               for i in range(cfg.num_walkers)]
     sim = CitySimulation(grid, walkers)
 
     # --- Output mode ---
