@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from random import choice
 from typing import List, Optional, Tuple
 
 # ------------------- State snapshots for the view -------------------
@@ -120,30 +121,30 @@ _DIR_DELTA = {
 
 _CORNER_DELTAS = {
     # corner -> list of neighbor corner moves (dj, di, new_corner)
-    "nw": [  # northwest
+    "nw": {  # northwest
         (0, -1, "ne"),  # west along street
         (+1, 0, "sw"),  # north along avenue
         (0, +1, "ne"),   # east along crosswalk to same intersection
         (-1, 0, "sw"),   # south along crosswalk to same intersection
-    ],
-    "ne": [
+    },
+    "ne": {
         (0, +1, "nw"),  # east along street
         (+1, 0, "se"),  # north along avenue
         (0, -1, "nw"),  # west along crosswalk to same intersection
         (-1, 0, "se"),  # south along crosswalk to same intersection
-    ],
-    "sw": [
+    },
+    "sw": {
         (0, -1, "se"),  # west along street
         (-1, 0, "nw"),  # south along avenue
         (0, +1, "nw"),  # east along crosswalk to same intersection
-        (+1, 0, "se"),   # north along crosswalk to same intersection
-    ],
-    "se": [
+        (+1, 0, "se"),  # north along crosswalk to same intersection
+    },
+    "se": {
         (0, +1, "sw"),  # east along street
         (-1, 0, "ne"),  # south along avenue
         (0, -1, "nw"),  # west along crosswalk to same intersection
-        (+1, 0, "sw"),   # north along crosswalk to same intersection
-    ]
+        (+1, 0, "sw"),  # north along crosswalk to same intersection
+    }
 }
 class Walker:
     def __init__(self,
