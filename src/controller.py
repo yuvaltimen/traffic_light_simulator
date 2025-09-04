@@ -31,7 +31,9 @@ def run_simulation(cfg):
     sim = CitySimulation(grid, walkers)
 
     if cfg.output_mode == OutputMode.JSON:
-        pass
+        for i in range(20):
+            print(sim.step(1))
+
     elif cfg.output_mode == OutputMode.PYGAME:
         # Setup Pygame
         pygame.init()

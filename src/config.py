@@ -11,7 +11,7 @@ class OutputMode(str, Enum):
 @dataclass
 class Config:
     # Visualization
-    output_mode: OutputMode = OutputMode.JSON
+    output_mode: OutputMode = OutputMode.PYGAME
     screen_width: int = 800
     screen_height: int = 800
     frame_rate: int = 60
