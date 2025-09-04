@@ -21,7 +21,8 @@ def run_simulation(cfg):
             walker_id=str(i),
             street_idx=0,
             avenue_idx=0,
-            direction="east",
+            corner="ne",
+            direction="south",
             speed=cfg.walker_speed,
             grid=grid
         )

@@ -82,6 +82,20 @@ class CityGrid:
     def intersection_xy(self, street_idx: int, avenue_idx: int) -> Tuple[float, float]:
         return self.avenue_east(avenue_idx), self.street_north(street_idx)
 
+    def corner_xy(self, street_idx: int, avenue_idx: int, corner: str):
+        left, right = list(self.avenue_positions())[avenue_idx]
+        top, bottom = list(self.street_positions())[street_idx]
+
+        if corner == "nw":
+            return left, top
+        elif corner == "ne":
+            return right, top
+        elif corner == "sw":
+            return left, bottom
+        elif corner == "se":
+            return right, bottom
+        return None
+
 
 # ------------------- Walker -------------------
 
@@ -104,69 +118,96 @@ _DIR_DELTA = {
     "north": (-1, 0),
 }
 
+_CORNER_DELTAS = {
+    # corner -> list of neighbor corner moves (dj, di, new_corner)
+    "nw": [  # northwest
+        (0, -1, "ne"),  # west along street
+        (+1, 0, "sw"),  # north along avenue
+        (0, +1, "ne"),   # east along crosswalk to same intersection
+        (-1, 0, "sw"),   # south along crosswalk to same intersection
+    ],
+    "ne": [
+        (0, +1, "nw"),  # east along street
+        (+1, 0, "se"),  # north along avenue
+        (0, -1, "nw"),  # west along crosswalk to same intersection
+        (-1, 0, "se"),  # south along crosswalk to same intersection
+    ],
+    "sw": [
+        (0, -1, "se"),  # west along street
+        (-1, 0, "nw"),  # south along avenue
+        (0, +1, "nw"),  # east along crosswalk to same intersection
+        (+1, 0, "se"),   # north along crosswalk to same intersection
+    ],
+    "se": [
+        (0, +1, "sw"),  # east along street
+        (-1, 0, "ne"),  # south along avenue
+        (0, -1, "nw"),  # west along crosswalk to same intersection
+        (+1, 0, "sw"),   # north along crosswalk to same intersection
+    ]
+}
 class Walker:
     def __init__(self,
                  walker_id: str,
                  street_idx: int,
                  avenue_idx: int,
+                 corner: str,
                  direction: str,
                  speed: float,
+                 target: Location,
                  grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx
         self.avenue_idx = avenue_idx
+        self.corner = corner  # "nw", "ne", "sw", "se"
         self.direction = direction
         self.speed = speed
         self.grid = grid
-
-        self.progress = 0.0  # 0..1 along current segment
+        self.progress = 0.0
+        self.target = target
         self._set_next_target()
 
-    def _neighbor_indices(self, direction: str) -> Optional[Tuple[int, int]]:
-        dj, di = _DIR_DELTA[direction]
-        j, i = self.street_idx + dj, self.avenue_idx + di
-        if 0 <= j < self.grid.num_streets and 0 <= i < self.grid.num_avenues:
-            return j, i
+    def _neighbor(self) -> Optional[Tuple[int, int, str]]:
+        """Return the next corner and its indices along current direction"""
+        for dj, di, new_corner in _CORNER_DELTAS[self.corner]:
+            j = self.street_idx + dj
+            i = self.avenue_idx + di
+            if 0 <= j < self.grid.num_streets and 0 <= i < self.grid.num_avenues:
+                return j, i, new_corner
         return None
 
-    def _pick_next_direction(self, direction_dict: dict, start_dir: str) -> str:
-        d = direction_dict[start_dir]
-        for _ in range(4):
-            if self._neighbor_indices(d) is not None:
-                return d
-            d = direction_dict[d]
-        return start_dir
-
     def _set_next_target(self):
-        nxt = self._neighbor_indices(self.direction)
+        nxt = self._neighbor()
         if nxt is None:
-            self.direction = self._pick_next_direction(_ZIG_ZAG, self.direction)
-            nxt = self._neighbor_indices(self.direction)
-            if nxt is None:
-                self.target = (self.street_idx, self.avenue_idx)
-                return
-        self.target = nxt
+            # Stay in place if no neighbor
+            self.target = (self.street_idx, self.avenue_idx, self.corner)
+        else:
+            self.target = nxt
         self.progress = 0.0
 
     def update(self, dt: float):
-        # Move along segment proportionally
-        step = self.speed * dt / self.grid.avenue_spacing
+        step = self.speed * dt / max(self.grid.street_spacing, self.grid.avenue_spacing)
         self.progress += step
         if self.progress >= 1.0:
-            # Snap to intersection
-            self.street_idx, self.avenue_idx = self.target
-            self.direction = self._pick_next_direction(_ZIG_ZAG, self.direction)
+            # Snap to target corner
+            self.street_idx, self.avenue_idx, self.corner = self.target
             self._set_next_target()
 
-    def to_state(self) -> WalkerState:
-        j0, i0 = self.street_idx, self.avenue_idx
-        j1, i1 = self.target
-
-        x0, y0 = self.grid.intersection_xy(j0, i0)
-        x1, y1 = self.grid.intersection_xy(j1, i1)
+    def to_state(self):
+        j0, i0, c0 = self.street_idx, self.avenue_idx, self.corner
+        j1, i1, c1 = self.target
+        x0, y0 = self.grid.corner_xy(j0, i0, c0)
+        x1, y1 = self.grid.corner_xy(j1, i1, c1)
         x = x0 + (x1 - x0) * self.progress
         y = y0 + (y1 - y0) * self.progress
-        return WalkerState(self.id, x, y, self.direction, j0, i0, j1, i1)
+        return {
+            "id": self.id,
+            "x": x,
+            "y": y,
+            "corner": self.corner,
+            "direction": self.direction,
+            "start": (j0, i0, c0),
+            "end": (j1, i1, c1)
+        }
 
 
 # ------------------- Simulation -------------------
