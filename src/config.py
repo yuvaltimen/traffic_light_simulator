@@ -25,8 +25,9 @@ class Config:
     avenue_crosswalk_length: float = 40.0
 
     # Agents
-    walker_speed: float = 60.0
-    walker_starting_direction: str = "east"
+    walker_speed: float = 6.0
+    walker_starting_direction: str = "north"
+    walker_starting_corner: str = "nw"
     num_walkers: int = 1
 
 

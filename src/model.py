@@ -121,28 +121,28 @@ _DIR_DELTA = {
 _CORNER_DELTAS = {
     # corner -> list of neighbor corner moves (dj, di, new_corner)
     "nw": {  # northwest
-        (0, -1, "ne"),  # west along street
-        (+1, 0, "sw"),  # north along avenue
-        (0, +1, "ne"),   # east along crosswalk to same intersection
-        (-1, 0, "sw"),   # south along crosswalk to same intersection
+        "west": (0, -1, "ne"),  # west along street
+        "north": (+1, 0, "sw"),  # north along avenue
+        "east": (0, +1, "ne"),   # east along crosswalk to same intersection
+        "south": (-1, 0, "sw"),   # south along crosswalk to same intersection
     },
     "ne": {
-        (0, +1, "nw"),  # east along street
-        (+1, 0, "se"),  # north along avenue
-        (0, -1, "nw"),  # west along crosswalk to same intersection
-        (-1, 0, "se"),  # south along crosswalk to same intersection
+        "east": (0, +1, "nw"),  # east along street
+        "north": (+1, 0, "se"),  # north along avenue
+        "west": (0, -1, "nw"),  # west along crosswalk to same intersection
+        "south": (-1, 0, "se"),  # south along crosswalk to same intersection
     },
     "sw": {
-        (0, -1, "se"),  # west along street
-        (-1, 0, "nw"),  # south along avenue
-        (0, +1, "nw"),  # east along crosswalk to same intersection
-        (+1, 0, "se"),  # north along crosswalk to same intersection
+        "west": (0, -1, "se"),  # west along street
+        "south": (-1, 0, "nw"),  # south along avenue
+        "east": (0, +1, "nw"),  # east along crosswalk to same intersection
+        "north": (+1, 0, "se"),  # north along crosswalk to same intersection
     },
     "se": {
-        (0, +1, "sw"),  # east along street
-        (-1, 0, "ne"),  # south along avenue
-        (0, -1, "nw"),  # west along crosswalk to same intersection
-        (+1, 0, "sw"),  # north along crosswalk to same intersection
+        "east": (0, +1, "sw"),  # east along street
+        "south": (-1, 0, "ne"),  # south along avenue
+        "west": (0, -1, "nw"),  # west along crosswalk to same intersection
+        "north": (+1, 0, "sw"),  # north along crosswalk to same intersection
     }
 }
 class Walker:
@@ -168,7 +168,7 @@ class Walker:
 
     def _neighbor(self) -> Optional[Tuple[int, int, str]]:
         """Return the next corner and its indices along current direction"""
-        for dj, di, new_corner in _CORNER_DELTAS[self.corner]:
+        for dj, di, new_corner in _CORNER_DELTAS[self.corner].values():
             j = self.street_idx + dj
             i = self.avenue_idx + di
             if 0 <= j < self.grid.num_streets and 0 <= i < self.grid.num_avenues:
