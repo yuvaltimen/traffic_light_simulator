@@ -90,14 +90,19 @@ class Visualizer:
     def draw(self, state: SimulationState, grid: CityGrid):
         self.screen.fill(WHITE)
 
+        traffic_light_length = 12
+        traffic_light_width = 6
+
         # Draw streets/avenues normally
         draw_grid(self.screen, grid, self.viewport)
 
         for intersection_tuple, offset_time in grid.traffic_light_grid.items():
-            light_color = GREEN if (state.time + offset_time) % grid.traffic_light_cycle_length > grid.avenue_traffic_light_cycle_times[0] else RED
+            avenue_light_color = GREEN if (state.time + offset_time) % grid.traffic_light_cycle_length > grid.avenue_traffic_light_cycle_times[0] else RED
+            street_light_color = RED if avenue_light_color == GREEN else GREEN
             intersection_x, intersection_y = grid.intersection_xy(*intersection_tuple)
             tx, ty = self.viewport.to_screen(intersection_x, intersection_y)
-            pygame.draw.circle(self.screen, light_color, (tx, ty), 8)
+            pygame.draw.rect(self.screen, avenue_light_color, (tx - (traffic_light_length / 2), ty - (traffic_light_width / 2), traffic_light_length, traffic_light_width))
+            pygame.draw.rect(self.screen, street_light_color, (tx - (traffic_light_width / 2), ty - (traffic_light_length / 2), traffic_light_width, traffic_light_length))
 
         # # Highlight walker segments (corner-to-corner)
         # for w in state.walkers:
