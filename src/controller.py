@@ -27,7 +27,7 @@ def run_simulation(cfg):
             direction=cfg.walker_starting_direction,
             speed=cfg.walker_speed,
             grid=grid,
-            target=StreetCornerLocation(cfg.num_streets, cfg.num_avenues, "nw"),
+            target=(cfg.num_streets, cfg.num_avenues, "nw"),
         )
         for i in range(cfg.num_walkers)
     ]

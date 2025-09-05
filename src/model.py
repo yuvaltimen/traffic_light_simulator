@@ -181,6 +181,20 @@ _CORNER_DELTAS = {
         "west": (0, 0, "sw"),  # west along crosswalk to same intersection
     }
 }
+
+_CROSSING_POLICIES = {
+    "greedy": {
+
+    },
+    "avenue_first": {
+
+    },
+    "street_first": {
+
+    }
+}
+
+
 class Walker:
     def __init__(self,
                  walker_id: str,
@@ -189,7 +203,8 @@ class Walker:
                  corner: str,
                  direction: str,
                  speed: float,
-                 target: StreetCornerLocation,
+                 target: tuple[int, int, str],
+                 # policy: str,
                  grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx
@@ -220,7 +235,34 @@ class Walker:
             self.target = nxt
         self.progress = 0.0
 
-    def update(self, dt: float):
+    def update(self, dt: float, world_time: float):
+
+        # Need to check if traffic light is green before crossing
+        if (self.target[0] == self.street_idx
+            and self.target[1] == self.avenue_idx
+            and self.progress <= 0.0):
+
+            # Get the avenue traffic light offset time
+            intersection_traffic_light_offset = self.grid.traffic_light_grid[(self.avenue_idx, self.street_idx)]
+            avenue_light_is_green = ((world_time + intersection_traffic_light_offset)
+                                  % self.grid.traffic_light_cycle_length
+                                  > self.grid.avenue_traffic_light_cycle_times[0])
+
+            # Check which crosswalk we're using (represented as "ne", "se", "nw", "sw")
+            if self.corner[0] != self.target[2][0]:
+                # If the first letter is different, then it's a north/south crosswalk (ie. street crosswalk)
+                if avenue_light_is_green:
+                    # If avenue light is green, street light is red, skip update
+                    return
+            elif self.corner[1] != self.target[2][1]:
+                # If the second letter is different, then it's a east/west crosswalk (ie. avenue crosswalk)
+                if not avenue_light_is_green:
+                    # If avenue light is not green, skip update
+                    return
+            else:
+                raise Exception(f"Bad state, corner transition: {self.corner} -> {self.target[2]}")
+
+
         step = self.speed * dt / max(self.grid.street_spacing, self.grid.avenue_spacing)
         self.progress += step
         if self.progress >= 1.0:
@@ -257,7 +299,7 @@ class CitySimulation:
     def step(self, dt: float) -> SimulationState:
         self.time += dt
         for w in self.walkers:
-            w.update(dt)
+            w.update(dt, self.time)
         return SimulationState(
             time=self.time,
             walkers=[w.to_state() for w in self.walkers],
