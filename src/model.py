@@ -184,12 +184,18 @@ _CORNER_DELTAS = {
 
 _CROSSING_POLICIES = {
     "greedy": {
+        # Always takes the first crosswalk available,
+        # rather than preferring staying on the same block
 
     },
     "avenue_first": {
+        # Prefers staying along the avenue, including waiting
+        # at lights rather than crossing the avenue
 
     },
     "street_first": {
+        # Prefers staying along the street, including waiting
+        # at lights rather than crossing the street crosswalks
 
     }
 }

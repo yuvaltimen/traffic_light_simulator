@@ -26,6 +26,8 @@ class Config:
 
     # tuple representing the (green, red) light times to cross the avenue
     # the corresponding traffic light times is the reverse, ie. (red, green)
+    #
+    #                                         green, red
     avenue_traffic_light_cycle_times: float = (15.0, 20.0)
     traffic_light_grid_random_seed: int = 42
 

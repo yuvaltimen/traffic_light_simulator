@@ -5,8 +5,8 @@ Traffic light offset times are uniformly sampled, and run on a scheduled cycle (
 The walker has a policy of how they want to turn at traffic lights:
 
 - `greedy` policy - will cross the traffic light in front of them if available
-- `avenue first` policy - will cross the avenue first if available
-- `street first` policy - will cross the street first if available
+- `avenue` policy - will stay along the avenue until it reaches the correct street
+- `street` policy - will stay along the street until it reaches the correct avenue
 
 ## Running Locally
 

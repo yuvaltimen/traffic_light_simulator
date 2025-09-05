@@ -1,9 +1,7 @@
-from random import random
-
 import pygame
 
 from src.config import OutputMode
-from src.model import CityGrid, Walker, CitySimulation, StreetCornerLocation
+from src.model import CityGrid, Walker, CitySimulation
 from src.view import Visualizer, Viewport
 
 def run_simulation(cfg):
