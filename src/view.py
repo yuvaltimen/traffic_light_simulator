@@ -37,7 +37,7 @@ def draw_grid(screen, grid: CityGrid, viewport, color=(0, 0, 0)):
         pygame.draw.line(screen, color, (0, ty), (viewport.screen_width, ty), 2)
         pygame.draw.line(screen, color, (0, by), (viewport.screen_width, by), 2)
 
-        pygame.draw.rect(screen, (255, 255, 0), (0, ty, grid.street_crosswalk_length, viewport.screen_width))
+        pygame.draw.rect(screen, (255, 255, 0), (0, ty, viewport.screen_width, grid.street_crosswalk_length))
 
         # Draw street label to the left
         label = font.render(f"St {idx+1}", True, color)
