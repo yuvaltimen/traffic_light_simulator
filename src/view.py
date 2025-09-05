@@ -15,6 +15,19 @@ PINK = (255, 192, 203)
 VIOLET = (128, 128, 0)
 GREY = (128, 128, 128)
 
+Red = (220, 50, 47)
+Blue = (38, 139, 210)
+Green = (133, 153, 0)
+Orange = (203, 75, 22)
+Purple = (108, 113, 196)
+Teal = (42, 161, 152)
+Pink = (211, 54, 130)
+Gold = (181, 137, 0)
+Turquoise = (0, 170, 200)
+Lime = (0, 200, 100)
+
+WALKER_COLOR_LIST = [Red, Blue, Green, Orange, Purple, Teal, Pink, Gold, Turquoise, Lime]
+
 
 class Viewport:
     def __init__(self, world_width, world_height, screen_width, screen_height):
@@ -115,10 +128,11 @@ class Visualizer:
             sx0, sy0 = self.viewport.to_screen(x0, y0)
             sx1, sy1 = self.viewport.to_screen(x1, y1)
 
+            walker_color = WALKER_COLOR_LIST[int(w["id"])]
+
             # Draw segment in red
             pygame.draw.line(self.screen, (255, 0, 0), (sx0, sy0), (sx1, sy1), 4)
 
-        # Draw walkers on top of segments
-        for w in state.walkers:
+            # Draw walkers on top of segments
             px, py = self.viewport.to_screen(w["x"], w["y"])
-            pygame.draw.circle(self.screen, (255, 0, 0), (px, py), 8)
+            pygame.draw.circle(self.screen, walker_color, (px, py), 8)

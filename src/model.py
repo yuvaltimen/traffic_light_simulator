@@ -23,7 +23,7 @@ class WalkerState:
 @dataclass(frozen=True)
 class SimulationState:
     time: float
-    walkers: List[WalkerState]
+    walkers: List[dict]
 
 
 # ------------------- City Grid -------------------

@@ -33,7 +33,7 @@ class Config:
     walker_speed: float = 50.0
     walker_starting_direction: str = "north"
     walker_starting_corner: str = "nw"
-    num_walkers: int = 1
+    num_walkers: int = 4
 
 
     # Runtime

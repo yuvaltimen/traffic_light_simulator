@@ -1,3 +1,5 @@
+from random import random
+
 import pygame
 
 from src.config import OutputMode
@@ -20,7 +22,7 @@ def run_simulation(cfg):
     # Initialize walkers
     walkers = [
         Walker(
-            walker_id=str(i),
+            walker_id="1",
             street_idx=0,
             avenue_idx=0,
             corner=cfg.walker_starting_corner,
@@ -28,8 +30,18 @@ def run_simulation(cfg):
             speed=cfg.walker_speed,
             grid=grid,
             target=(cfg.num_streets, cfg.num_avenues, "nw"),
+        ),
+        Walker(
+            walker_id="2",
+            street_idx=1,
+            avenue_idx=1,
+            corner=cfg.walker_starting_corner,
+            direction=cfg.walker_starting_direction,
+            speed=cfg.walker_speed,
+            grid=grid,
+            target=(cfg.num_streets, cfg.num_avenues, "nw"),
         )
-        for i in range(cfg.num_walkers)
+        # for i in range(cfg.num_walkers)
     ]
 
     sim = CitySimulation(grid, walkers)
