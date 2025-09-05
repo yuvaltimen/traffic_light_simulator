@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple
 
 # ------------------- State snapshots for the view -------------------
 @dataclass(frozen=True)
-class Location:
+class StreetCornerLocation:
     street_idx: int
     avenue_idx: int
     corner: str  # "east", "south", "west", "north"
@@ -67,7 +67,6 @@ class CityGrid:
             bottom = top + self.street_crosswalk_length
             yield top, bottom
 
-    # Walkers helpers (centerlines)
     def avenue_east(self, idx: int) -> float:
         return idx * self.avenue_spacing + self.avenue_block_length
 
@@ -154,7 +153,7 @@ class Walker:
                  corner: str,
                  direction: str,
                  speed: float,
-                 target: Location,
+                 target: StreetCornerLocation,
                  grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx

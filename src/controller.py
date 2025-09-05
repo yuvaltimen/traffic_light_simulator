@@ -1,7 +1,7 @@
 import pygame
 
 from src.config import OutputMode
-from src.model import CityGrid, Walker, CitySimulation, Location
+from src.model import CityGrid, Walker, CitySimulation, StreetCornerLocation
 from src.view import Visualizer, Viewport
 
 def run_simulation(cfg):
@@ -25,7 +25,7 @@ def run_simulation(cfg):
             direction="south",
             speed=cfg.walker_speed,
             grid=grid,
-            target=Location(cfg.num_streets, cfg.num_avenues, "nw"),
+            target=StreetCornerLocation(cfg.num_streets, cfg.num_avenues, "nw"),
         )
         for i in range(cfg.num_walkers)
     ]

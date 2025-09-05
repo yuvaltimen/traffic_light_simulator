@@ -22,7 +22,7 @@ class Config:
     street_block_length: float = 50.0
     street_crosswalk_length: float = 20.0
     avenue_block_length: float = 70.0
-    avenue_crosswalk_length: float = 30.0
+    avenue_crosswalk_length: float = 40.0
 
     # Agents
     walker_speed: float = 60.0
