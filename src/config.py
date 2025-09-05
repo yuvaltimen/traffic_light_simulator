@@ -24,6 +24,11 @@ class Config:
     avenue_block_length: float = 70.0
     avenue_crosswalk_length: float = 40.0
 
+    # tuple representing the (green, red) light times to cross the avenue
+    # the corresponding traffic light times is the reverse, ie. (red, green)
+    avenue_traffic_light_cycle_times: float = (15.0, 20.0)
+    traffic_light_grid_random_seed: int = 42
+
     # Agents
     walker_speed: float = 6.0
     walker_starting_direction: str = "north"

@@ -32,7 +32,6 @@ class Viewport:
         return sx, sy
 
 def draw_grid(screen, grid: CityGrid, viewport, color=(0, 0, 0)):
-    font = pygame.font.SysFont("Arial", 16)
 
     # Avenues (vertical lines)
     for idx, (left, right) in enumerate(grid.avenue_positions()):
@@ -71,20 +70,20 @@ class Visualizer:
         # Draw streets/avenues normally
         draw_grid(self.screen, grid, self.viewport)
 
-        # Highlight walker segments (corner-to-corner)
-        for w in state.walkers:
-            # Get segment start and end coordinates
-            j0, i0, c0 = w["start"]
-            j1, i1, c1 = w["end"]
-            x0, y0 = grid.corner_xy(j0, i0, c0)
-            x1, y1 = grid.corner_xy(j1, i1, c1)
-            sx0, sy0 = self.viewport.to_screen(x0, y0)
-            sx1, sy1 = self.viewport.to_screen(x1, y1)
-
-            # Draw segment in red
-            pygame.draw.line(self.screen, (255, 0, 0), (sx0, sy0), (sx1, sy1), 4)
-
-        # Draw walkers on top of segments
-        for w in state.walkers:
-            px, py = self.viewport.to_screen(w["x"], w["y"])
-            pygame.draw.circle(self.screen, (255, 0, 0), (px, py), 8)
+        # # Highlight walker segments (corner-to-corner)
+        # for w in state.walkers:
+        #     # Get segment start and end coordinates
+        #     j0, i0, c0 = w["start"]
+        #     j1, i1, c1 = w["end"]
+        #     x0, y0 = grid.corner_xy(j0, i0, c0)
+        #     x1, y1 = grid.corner_xy(j1, i1, c1)
+        #     sx0, sy0 = self.viewport.to_screen(x0, y0)
+        #     sx1, sy1 = self.viewport.to_screen(x1, y1)
+        #
+        #     # Draw segment in red
+        #     pygame.draw.line(self.screen, (255, 0, 0), (sx0, sy0), (sx1, sy1), 4)
+        #
+        # # Draw walkers on top of segments
+        # for w in state.walkers:
+        #     px, py = self.viewport.to_screen(w["x"], w["y"])
+        #     pygame.draw.circle(self.screen, (255, 0, 0), (px, py), 8)

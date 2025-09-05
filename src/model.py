@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import choice
+from random import choice, random
 from typing import List, Optional, Tuple
 
 # ------------------- State snapshots for the view -------------------
@@ -28,6 +28,26 @@ class SimulationState:
 
 # ------------------- City Grid -------------------
 
+def create_traffic_light_grid(num_streets: int, num_avenues: int, cycle_length: float, rndm_seed: int) -> dict[tuple[int, int], float]:
+    """
+    Creates the offset grid for the traffic light cycles.
+    :param num_avenues: number of avenues in the simulation
+    :param num_streets: number of streets in the simulation
+    :param cycle_length: total length of the green + red time in seconds
+    :param rndm_seed: random number generator seed to use
+    :return: Dictionary
+        keys: tuple(int, int), representing (avenue_index, street_index) intersection
+        values: float, representing the number of seconds the given intersection's
+            traffic light initial offset is in its cycle, (ie. 1.2s means when the simulation
+            starts, this intersection will begin 1.2s into its cycle)
+    """
+    d = dict()
+    for x in range(num_avenues):
+        for y in range(num_streets):
+            d[x][y] = random() * cycle_length
+    return d
+
+
 class CityGrid:
     def __init__(
         self,
@@ -37,10 +57,14 @@ class CityGrid:
         street_crosswalk_length: float,
         avenue_block_length: float,
         avenue_crosswalk_length: float,
+        avenue_traffic_light_cycle_times: tuple[float, float],
+        traffic_light_grid_random_seed: int,
     ):
+        # city size
         self.num_streets = num_streets
         self.num_avenues = num_avenues
 
+        # street lengths
         self.street_block_length = street_block_length
         self.street_crosswalk_length = street_crosswalk_length
         self.avenue_block_length = avenue_block_length
@@ -53,6 +77,16 @@ class CityGrid:
         # total dimensions
         self.width = num_avenues * self.avenue_spacing + avenue_block_length
         self.height = num_streets * self.street_spacing + street_block_length
+
+        # traffic lights
+        self.avenue_traffic_light_cycle_times = avenue_traffic_light_cycle_times
+        self.traffic_light_grid_random_seed = traffic_light_grid_random_seed
+        self.traffic_light_grid = create_traffic_light_grid(
+            self.num_streets,
+            self.num_avenues,
+            self.avenue_traffic_light_cycle_times[0] + self.avenue_traffic_light_cycle_times[1],
+            self.traffic_light_grid_random_seed,
+        )
 
     # Drawing helpers (edges of crosswalks)
     def avenue_positions(self):
