@@ -96,6 +96,7 @@ class Visualizer:
         # Draw streets/avenues normally
         draw_grid(self.screen, grid, self.viewport)
 
+        # Traffic light animations
         for intersection_tuple, offset_time in grid.traffic_light_grid.items():
             avenue_light_color = GREEN if (state.time + offset_time) % grid.traffic_light_cycle_length > grid.avenue_traffic_light_cycle_times[0] else RED
             street_light_color = RED if avenue_light_color == GREEN else GREEN
@@ -104,20 +105,20 @@ class Visualizer:
             pygame.draw.rect(self.screen, avenue_light_color, (tx - (traffic_light_length / 2), ty - (traffic_light_width / 2), traffic_light_length, traffic_light_width))
             pygame.draw.rect(self.screen, street_light_color, (tx - (traffic_light_width / 2), ty - (traffic_light_length / 2), traffic_light_width, traffic_light_length))
 
-        # # Highlight walker segments (corner-to-corner)
-        # for w in state.walkers:
-        #     # Get segment start and end coordinates
-        #     j0, i0, c0 = w["start"]
-        #     j1, i1, c1 = w["end"]
-        #     x0, y0 = grid.corner_xy(j0, i0, c0)
-        #     x1, y1 = grid.corner_xy(j1, i1, c1)
-        #     sx0, sy0 = self.viewport.to_screen(x0, y0)
-        #     sx1, sy1 = self.viewport.to_screen(x1, y1)
-        #
-        #     # Draw segment in red
-        #     pygame.draw.line(self.screen, (255, 0, 0), (sx0, sy0), (sx1, sy1), 4)
-        #
-        # # Draw walkers on top of segments
-        # for w in state.walkers:
-        #     px, py = self.viewport.to_screen(w["x"], w["y"])
-        #     pygame.draw.circle(self.screen, (255, 0, 0), (px, py), 8)
+        # Highlight walker segments (corner-to-corner)
+        for w in state.walkers:
+            # Get segment start and end coordinates
+            j0, i0, c0 = w["start"]
+            j1, i1, c1 = w["end"]
+            x0, y0 = grid.corner_xy(j0, i0, c0)
+            x1, y1 = grid.corner_xy(j1, i1, c1)
+            sx0, sy0 = self.viewport.to_screen(x0, y0)
+            sx1, sy1 = self.viewport.to_screen(x1, y1)
+
+            # Draw segment in red
+            pygame.draw.line(self.screen, (255, 0, 0), (sx0, sy0), (sx1, sy1), 4)
+
+        # Draw walkers on top of segments
+        for w in state.walkers:
+            px, py = self.viewport.to_screen(w["x"], w["y"])
+            pygame.draw.circle(self.screen, (255, 0, 0), (px, py), 8)

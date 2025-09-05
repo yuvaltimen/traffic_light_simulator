@@ -17,8 +17,8 @@ class Config:
     frame_rate: int = 60
 
     # Simulation world
-    num_streets: int = 10
-    num_avenues: int = 6
+    num_streets: int = 3
+    num_avenues: int = 2
     street_block_length: float = 50.0
     street_crosswalk_length: float = 20.0
     avenue_block_length: float = 70.0
@@ -30,7 +30,7 @@ class Config:
     traffic_light_grid_random_seed: int = 42
 
     # Agents
-    walker_speed: float = 6.0
+    walker_speed: float = 50.0
     walker_starting_direction: str = "north"
     walker_starting_corner: str = "nw"
     num_walkers: int = 1
