@@ -44,7 +44,7 @@ def create_traffic_light_grid(num_streets: int, num_avenues: int, cycle_length: 
     d = dict()
     for x in range(num_avenues):
         for y in range(num_streets):
-            d[x][y] = random() * cycle_length
+            d[(x,y)] = random() * cycle_length
     return d
 
 
@@ -80,11 +80,12 @@ class CityGrid:
 
         # traffic lights
         self.avenue_traffic_light_cycle_times = avenue_traffic_light_cycle_times
+        self.traffic_light_cycle_length = self.avenue_traffic_light_cycle_times[0] + self.avenue_traffic_light_cycle_times[1]
         self.traffic_light_grid_random_seed = traffic_light_grid_random_seed
         self.traffic_light_grid = create_traffic_light_grid(
             self.num_streets,
             self.num_avenues,
-            self.avenue_traffic_light_cycle_times[0] + self.avenue_traffic_light_cycle_times[1],
+            self.traffic_light_cycle_length,
             self.traffic_light_grid_random_seed,
         )
 
@@ -113,8 +114,8 @@ class CityGrid:
     def street_south(self, idx: int) -> float:
         return idx * self.street_spacing + self.street_block_length + self.street_crosswalk_length
 
-    def intersection_xy(self, street_idx: int, avenue_idx: int) -> Tuple[float, float]:
-        return self.avenue_east(avenue_idx), self.street_north(street_idx)
+    def intersection_xy(self, avenue_idx: int, street_idx: int, ) -> Tuple[float, float]:
+        return self.avenue_east(avenue_idx) + (self.avenue_crosswalk_length / 2), self.street_north(street_idx) + (self.street_crosswalk_length / 2)
 
     def corner_xy(self, street_idx: int, avenue_idx: int, corner: str):
         left, right = list(self.avenue_positions())[avenue_idx]
