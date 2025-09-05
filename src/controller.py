@@ -28,25 +28,37 @@ def run_simulation(cfg):
             speed=cfg.walker_speed,
             grid=grid,
             target=(cfg.num_streets, cfg.num_avenues, "nw"),
+            policy="greedy",
         ),
         Walker(
             walker_id="2",
-            street_idx=1,
-            avenue_idx=1,
+            street_idx=0,
+            avenue_idx=0,
             corner=cfg.walker_starting_corner,
             direction=cfg.walker_starting_direction,
             speed=cfg.walker_speed,
             grid=grid,
             target=(cfg.num_streets, cfg.num_avenues, "nw"),
+            policy="avenue",
+        ),
+        Walker(
+            walker_id="2",
+            street_idx=0,
+            avenue_idx=0,
+            corner=cfg.walker_starting_corner,
+            direction=cfg.walker_starting_direction,
+            speed=cfg.walker_speed,
+            grid=grid,
+            target=(cfg.num_streets, cfg.num_avenues, "nw"),
+            policy="street",
         )
-        # for i in range(cfg.num_walkers)
     ]
 
     sim = CitySimulation(grid, walkers)
 
     if cfg.output_mode == OutputMode.JSON:
         for i in range(20):
-            print(sim.step(1))
+            print(sim.step(1).__dict__)
 
     elif cfg.output_mode == OutputMode.PYGAME:
         # Setup Pygame

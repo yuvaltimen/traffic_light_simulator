@@ -210,7 +210,7 @@ class Walker:
                  direction: str,
                  speed: float,
                  target: tuple[int, int, str],
-                 # policy: str,
+                 policy: str,
                  grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx
@@ -219,6 +219,7 @@ class Walker:
         self.direction = direction
         self.speed = speed
         self.grid = grid
+        self.policy = policy
         self.progress = 0.0
         self.target = target
         self._set_next_target()

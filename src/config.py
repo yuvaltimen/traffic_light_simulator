@@ -17,8 +17,8 @@ class Config:
     frame_rate: int = 60
 
     # Simulation world
-    num_streets: int = 3
-    num_avenues: int = 2
+    num_streets: int = 5
+    num_avenues: int = 6
     street_block_length: float = 50.0
     street_crosswalk_length: float = 20.0
     avenue_block_length: float = 70.0
