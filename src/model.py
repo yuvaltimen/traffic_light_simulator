@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import choice, random
+import random
 from typing import List, Optional, Tuple
 
 # ------------------- State snapshots for the view -------------------
@@ -41,10 +41,11 @@ def create_traffic_light_grid(num_streets: int, num_avenues: int, cycle_length: 
             traffic light initial offset is in its cycle, (ie. 1.2s means when the simulation
             starts, this intersection will begin 1.2s into its cycle)
     """
+    random.seed(rndm_seed)
     d = dict()
     for x in range(num_avenues):
         for y in range(num_streets):
-            d[(x,y)] = random() * cycle_length
+            d[(x,y)] = random.random() * cycle_length
     return d
 
 
