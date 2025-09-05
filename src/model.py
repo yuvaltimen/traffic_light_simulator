@@ -123,13 +123,13 @@ class CityGrid:
         top, bottom = list(self.street_positions())[street_idx]
 
         if corner == "nw":
-            return left, top
-        elif corner == "ne":
-            return right, top
-        elif corner == "sw":
             return left, bottom
-        elif corner == "se":
+        elif corner == "ne":
             return right, bottom
+        elif corner == "sw":
+            return left, top
+        elif corner == "se":
+            return right, top
         return None
 
 
@@ -157,28 +157,28 @@ _DIR_DELTA = {
 _CORNER_DELTAS = {
     # corner -> list of neighbor corner moves (dj, di, new_corner)
     "nw": {  # northwest
-        "east": (0, +1, "ne"),   # east along crosswalk to same intersection
+        "east": (0, 0, "ne"),   # east along crosswalk to same intersection
         "north": (+1, 0, "sw"),  # north along avenue
         "west": (0, -1, "ne"),  # west along street
-        "south": (-1, 0, "sw"),   # south along crosswalk to same intersection
+        "south": (0, 0, "sw"),   # south along crosswalk to same intersection
     },
     "ne": {
         "north": (+1, 0, "se"),  # north along avenue
         "east": (0, +1, "nw"),  # east along street
-        "west": (0, -1, "nw"),  # west along crosswalk to same intersection
-        "south": (-1, 0, "se"),  # south along crosswalk to same intersection
+        "west": (0, 0, "nw"),  # west along crosswalk to same intersection
+        "south": (0, 0, "se"),  # south along crosswalk to same intersection
     },
     "sw": {
-        "north": (+1, 0, "se"),  # north along crosswalk to same intersection
-        "east": (0, +1, "nw"),  # east along crosswalk to same intersection
+        "north": (0, 0, "nw"),  # north along crosswalk to same intersection
+        "east": (0, 0, "se"),  # east along crosswalk to same intersection
         "west": (0, -1, "se"),  # west along street
         "south": (-1, 0, "nw"),  # south along avenue
     },
     "se": {
-        "north": (+1, 0, "sw"),  # north along crosswalk to same intersection
+        "north": (0, 0, "ne"),  # north along crosswalk to same intersection
         "east": (0, +1, "sw"),  # east along street
         "south": (-1, 0, "ne"),  # south along avenue
-        "west": (0, -1, "nw"),  # west along crosswalk to same intersection
+        "west": (0, 0, "sw"),  # west along crosswalk to same intersection
     }
 }
 class Walker:
