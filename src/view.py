@@ -1,6 +1,4 @@
 import pygame
-from PIL.ImageChops import screen
-
 from src.model import CityGrid, SimulationState
 
 # COLORS
@@ -15,6 +13,8 @@ PURPLE = (128, 0, 128)
 ORANGE = (255, 165, 0)
 PINK = (255, 192, 203)
 VIOLET = (128, 128, 0)
+GREY = (128, 128, 128)
+
 
 class Viewport:
     def __init__(self, world_width, world_height, screen_width, screen_height):
@@ -52,27 +52,33 @@ def draw_grid(scrn, grid: CityGrid, viewport, color=BLACK):
     for idx, (left, right) in enumerate(grid.avenue_positions()):
         lx, _ = viewport.to_screen(left, 0)
         rx, _ = viewport.to_screen(right, 0)
-        pygame.draw.line(scrn, color, (lx, 0), (lx, viewport.screen_height), 2)
-        pygame.draw.line(scrn, color, (rx, 0), (rx, viewport.screen_height), 2)
 
         pygame.draw.rect(
             scrn,
-            BLUE,
-            (lx, 0, viewport.to_screen_length_x(grid.avenue_crosswalk_length), viewport.screen_height)
+            GREY,
+            (lx, 0, viewport.to_screen_length_x(grid.avenue_crosswalk_length) + 1, viewport.screen_height)
         )
+
+        pygame.draw.line(scrn, color, (lx, 0), (lx, viewport.screen_height), 2)
+        pygame.draw.line(scrn, color, (rx, 0), (rx, viewport.screen_height), 2)
+
+
 
     # Streets (horizontal lines)
     for idx, (top, bottom) in enumerate(grid.street_positions()):
         _, ty = viewport.to_screen(0, top)
         _, by = viewport.to_screen(0, bottom)
-        pygame.draw.line(scrn, color, (0, ty), (viewport.screen_width, ty), 2)
-        pygame.draw.line(scrn, color, (0, by), (viewport.screen_width, by), 2)
 
         pygame.draw.rect(
             scrn,
-            YELLOW,
-            (0, ty, viewport.screen_width, viewport.to_screen_length_y(grid.street_crosswalk_length))
+            GREY,
+            (0, ty, viewport.screen_width, viewport.to_screen_length_y(grid.street_crosswalk_length) + 1)
         )
+
+        pygame.draw.line(scrn, color, (0, ty), (viewport.screen_width, ty), 2)
+        pygame.draw.line(scrn, color, (0, by), (viewport.screen_width, by), 2)
+
+
 
 
 
