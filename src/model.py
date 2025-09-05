@@ -157,8 +157,8 @@ _DIR_DELTA = {
 _CORNER_DELTAS = {
     # corner -> list of neighbor corner moves (dj, di, new_corner)
     "nw": {  # northwest
-        "east": (0, 0, "ne"),   # east along crosswalk to same intersection
         "north": (+1, 0, "sw"),  # north along avenue
+        "east": (0, 0, "ne"),   # east along crosswalk to same intersection
         "west": (0, -1, "ne"),  # west along street
         "south": (0, 0, "sw"),   # south along crosswalk to same intersection
     },
@@ -177,8 +177,8 @@ _CORNER_DELTAS = {
     "se": {
         "north": (0, 0, "ne"),  # north along crosswalk to same intersection
         "east": (0, +1, "sw"),  # east along street
-        "south": (-1, 0, "ne"),  # south along avenue
         "west": (0, 0, "sw"),  # west along crosswalk to same intersection
+        "south": (-1, 0, "ne"),  # south along avenue
     }
 }
 
