@@ -89,7 +89,7 @@ def run_simulation(cfg):
 
         while not all(walker.destination_corner == (walker.street_idx, walker.avenue_idx, walker.corner) for walker in sim.walkers):
             dt = 1 / cfg.frame_rate
-            state = sim.step(dt)
+            sim.step(dt)
             for walker in sim.walkers:
                 if walker.destination_corner != (walker.street_idx, walker.avenue_idx, walker.corner):
                     walker_costs[walker.policy] += dt
