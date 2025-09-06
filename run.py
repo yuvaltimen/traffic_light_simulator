@@ -31,7 +31,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-    # print(f"{args=}")
     cfg: Config = get_default_config()
     cfg.output_mode = OutputMode(args.mode)
     cfg.screen_width = args.screen_width
