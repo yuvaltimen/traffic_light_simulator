@@ -296,36 +296,6 @@ class Walker:
                 else:
                     nxt = None
 
-        # If policy is 'greedy', then we will take whatever light is available in the direction of our destination
-        if self.policy == "greedy":
-            intersection_traffic_light_offset = self.grid.traffic_light_grid[(self.avenue_idx, self.street_idx)]
-            avenue_light_is_green = ((world_time + intersection_traffic_light_offset)
-                                     % self.grid.traffic_light_cycle_length
-                                     > self.grid.avenue_traffic_light_cycle_times[0])
-
-            if avenue_light_is_green:
-                if e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                elif n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                else:
-                    nxt = None
-            elif not avenue_light_is_green:
-                if n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                elif e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                else:
-                    nxt = None
-
         if nxt is None:
             # Stay in place if no neighbor
             self.target = (self.street_idx, self.avenue_idx, self.corner)
@@ -358,17 +328,11 @@ class Walker:
                 # If the first letter is different, then it's a north/south crosswalk (ie. street crosswalk)
                 if avenue_light_is_green:
                     # If avenue light is green, street light is red, skip update
-                    # TODO: check policy to change target?
-                    if self.policy == "greedy":
-                        self._set_next_target(world_time=world_time)
                     return
             elif self.corner[1] != self.target[2][1]:
                 # If the second letter is different, then it's a east/west crosswalk (ie. avenue crosswalk)
                 if not avenue_light_is_green:
                     # If avenue light is not green, skip update
-                    # TODO: check policy to change target?
-                    if self.policy == "greedy":
-                        self._set_next_target(world_time=world_time)
                     return
             else:
                 raise Exception(f"Bad state, corner transition: {self.corner} -> {self.target[2]}")
