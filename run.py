@@ -31,7 +31,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print(f"{args=}")
+    # print(f"{args=}")
     cfg: Config = get_default_config()
     cfg.output_mode = OutputMode(args.mode)
     cfg.screen_width = args.screen_width
@@ -43,10 +43,12 @@ def main():
     cfg.street_crosswalk_length = args.street_crosswalk_length
     cfg.avenue_block_length = args.avenue_block_length
     cfg.avenue_crosswalk_length = args.avenue_crosswalk_length
-    cfg.traffic_cycle = (float(args.traffic_cycle.split(",")[0]), float(args.traffic_cycle.split(",")[1]))
+    cfg.avenue_traffic_light_cycle_times = (float(args.traffic_cycle.split(",")[0]), float(args.traffic_cycle.split(",")[1]))
     cfg.random_seed = args.random_seed
     cfg.walker_speed = args.walker_speed
     cfg.walker_starting_corner = args.walker_starting_corner
+
+    print(cfg)
 
     run_simulation(cfg)
 

@@ -29,7 +29,7 @@ class Config:
     # the corresponding traffic light times is the reverse, ie. (red, green)
     #
     #                                         green, red
-    avenue_traffic_light_cycle_times: float = (15.0, 20.0)
+    avenue_traffic_light_cycle_times: tuple[float, float] = (15.0, 20.0)
     traffic_light_grid_random_seed: int = 42
 
     # Agents
