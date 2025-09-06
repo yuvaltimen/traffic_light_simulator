@@ -35,3 +35,10 @@ To run the simulation yourself, follow the instructions below.
 ``` 
 3. Invoke the program from the root level by running `python run.py`
 4. To update configurations, pass in flags to override the default config values. For example: `python run.py --mode statistics --walker_speed 30.5`
+
+
+### Helpful findings...
+Using the default configs, the random seeds to use to find differences are:
+- 61
+- 76
+- 88
