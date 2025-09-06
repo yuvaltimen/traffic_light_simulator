@@ -33,6 +33,6 @@ To run the simulation yourself, follow the instructions below.
 
 ```bash
 >> pip install -r requirements.txt
-```
-3. Edit `src/config.py` for any simulation-level configurations you want to change. 
-4. Go to `run.py` at the root level, and click run.
+``` 
+3. Go to `run.py` at the root level, and click run.
+4. To update configurations, pass in flags to override the default config values.

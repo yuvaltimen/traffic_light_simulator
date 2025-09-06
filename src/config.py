@@ -12,7 +12,7 @@ class OutputMode(str, Enum):
 @dataclass
 class Config:
     # Visualization
-    output_mode: OutputMode = OutputMode.STATISTICS
+    output_mode: OutputMode = OutputMode.PYGAME
     screen_width: int = 800
     screen_height: int = 800
     frame_rate: int = 60
@@ -34,13 +34,7 @@ class Config:
 
     # Agents
     walker_speed: float = 60.0
-    walker_starting_direction: str = "north"
     walker_starting_corner: str = "sw"
-
-    # Runtime
-    fps: int = 60
-    max_time: float | None = None  # None = run until quit, or set seconds
-
 
 def get_default_config() -> Config:
     return Config()
