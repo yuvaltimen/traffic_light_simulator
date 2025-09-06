@@ -206,15 +206,6 @@ class Walker:
         self.target = None
         self._set_next_target(world_time=0)
 
-    def _neighbor(self) -> Optional[Tuple[int, int, str]]:
-        """Return the next corner and its indices along current direction"""
-        for dj, di, new_corner in _CORNER_DELTAS[self.corner].values():
-            j = self.street_idx + dj
-            i = self.avenue_idx + di
-            if 0 <= j < self.grid.num_streets and 0 <= i < self.grid.num_avenues:
-                return j, i, new_corner
-        return None
-
     def _set_next_target(self, world_time: float):
         nxt = None
         # Choose the next location based on the walker's policy
@@ -243,31 +234,67 @@ class Walker:
         else:
             e_w_axis = -1
 
-        # If policy is 'avenue', then we will continue walking N/S until we hit the destination street, then turn
-        if self.policy == "avenue":
-            if n_s_axis == +1:
-                nxt = _CORNER_DELTAS[self.corner]["north"]
-            elif n_s_axis == -1:
-                nxt = _CORNER_DELTAS[self.corner]["south"]
-            elif e_w_axis == +1:
-                nxt = _CORNER_DELTAS[self.corner]["east"]
-            elif e_w_axis == -1:
-                nxt = _CORNER_DELTAS[self.corner]["west"]
-            else:
-                nxt = None
+        # Observe the traffic light to see which direction
+        intersection_traffic_light_offset = self.grid.traffic_light_grid[(self.avenue_idx, self.street_idx)]
+        avenue_light_is_green = ((world_time + intersection_traffic_light_offset)
+                                 % self.grid.traffic_light_cycle_length
+                                 > self.grid.avenue_traffic_light_cycle_times[0])
 
-        # If policy is 'street', then we will continue walking E/W until we hit the destination avenue, then turn
-        if self.policy == "street":
-            if e_w_axis == +1:
-                nxt = _CORNER_DELTAS[self.corner]["east"]
-            elif e_w_axis == -1:
-                nxt = _CORNER_DELTAS[self.corner]["west"]
-            elif n_s_axis == +1:
+        # If policy is 'avenue', then we will continue walking N/S until we hit the destination street or a red light, then turn
+        if self.policy == "avenue":
+
+            if n_s_axis == +1 and self.corner[0] == "n":
                 nxt = _CORNER_DELTAS[self.corner]["north"]
-            elif n_s_axis == -1:
+            elif n_s_axis == -1 and self.corner[0] == "s":
                 nxt = _CORNER_DELTAS[self.corner]["south"]
-            else:
-                nxt = None
+            elif avenue_light_is_green:
+                if e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                elif n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                else:
+                    nxt = None
+            elif not avenue_light_is_green:
+                if n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                elif e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                else:
+                    nxt = None
+
+        # If policy is 'street', then we will take the opportunity to cross the avenue along the street if it's green
+        if self.policy == "street":
+
+            if avenue_light_is_green:
+                if e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                elif n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                else:
+                    nxt = None
+            elif not avenue_light_is_green:
+                if n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                elif e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                else:
+                    nxt = None
 
         # If policy is 'greedy', then we will take whatever light is available in the direction of our destination
         if self.policy == "greedy":

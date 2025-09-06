@@ -1,6 +1,7 @@
 import math
 
 import pygame
+
 from src.model import CityGrid, SimulationState
 
 # COLORS
@@ -152,11 +153,12 @@ class Visualizer:
         # Highlight walker segments (corner-to-corner)
         for w in state.walkers:
 
-            # Highlight the destination corner for each walker
+            # X-mark the destination corner for each walker
             dj, di, dc = w["destination"]
             xd, yd = grid.corner_xy(dj, di, dc)
             sxd, syd = self.viewport.to_screen(xd, yd)
-            pygame.draw.circle(self.screen, time_to_color(state.time), (sxd, syd), 6)
+            pygame.draw.line(self.screen, RED, (sxd - 5, syd - 5), (sxd + 5, syd + 5), 5)
+            pygame.draw.line(self.screen, RED, (sxd + 5, syd - 5), (sxd - 5, syd + 5), 5)
 
             # Get segment start and end coordinates
             j0, i0, c0 = w["start"]
