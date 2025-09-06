@@ -182,24 +182,6 @@ _CORNER_DELTAS = {
     }
 }
 
-_CROSSING_POLICIES = {
-    "greedy": {
-        # Always takes the first crosswalk available,
-        # rather than preferring staying on the same block
-
-    },
-    "avenue_first": {
-        # Prefers staying along the avenue, including waiting
-        # at lights rather than crossing the avenue
-
-    },
-    "street_first": {
-        # Prefers staying along the street, including waiting
-        # at lights rather than crossing the street crosswalks
-
-    }
-}
-
 
 class Walker:
     def __init__(self,
@@ -207,22 +189,22 @@ class Walker:
                  street_idx: int,
                  avenue_idx: int,
                  corner: str,
-                 direction: str,
                  speed: float,
-                 target: tuple[int, int, str],
+                 destination_corner: tuple[int, int, str],
                  policy: str,
                  grid: CityGrid):
         self.id = walker_id
         self.street_idx = street_idx
         self.avenue_idx = avenue_idx
         self.corner = corner  # "nw", "ne", "sw", "se"
-        self.direction = direction
         self.speed = speed
         self.grid = grid
         self.policy = policy
         self.progress = 0.0
-        self.target = target
+        self.destination_corner = destination_corner
+        self.target = None
         self._set_next_target()
+        print(self.target)
 
     def _neighbor(self) -> Optional[Tuple[int, int, str]]:
         """Return the next corner and its indices along current direction"""
@@ -234,12 +216,69 @@ class Walker:
         return None
 
     def _set_next_target(self):
-        nxt = self._neighbor()
+        nxt = None
+        # Choose the next location based on the walker's policy
+        # First, need to find directions required to reach destination
+
+        n_s_axis = None
+        e_w_axis = None
+
+        # n_s_axis: +1 if walker should head north, -1 if should head south, 0 if on the correct j axis
+        if self.destination_corner[0] != self.street_idx:
+            n_s_axis = (self.destination_corner[0] - self.street_idx) / abs(self.destination_corner[0] - self.street_idx)
+        elif self.destination_corner[2][0] == self.corner[0]:
+            n_s_axis = 0
+        elif self.destination_corner[2][0] == "n":
+            n_s_axis = +1
+        else:
+            n_s_axis = -1
+
+        # e_w_axis: +1 if walker should head east, -1 if should head west, 0 if on the correct i axis
+        if self.destination_corner[1] != self.avenue_idx:
+            e_w_axis = (self.destination_corner[1] - self.avenue_idx) / abs(self.destination_corner[1] - self.avenue_idx)
+        elif self.destination_corner[2][1] == self.corner[1]:
+            e_w_axis = 0
+        elif self.destination_corner[2][1] == "e":
+            e_w_axis = +1
+        else:
+            e_w_axis = -1
+
+        # If policy is 'avenue', then we will continue walking N/S until we hit the destination street, then turn
+        if self.policy == "avenue":
+            if n_s_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["north"]
+            elif n_s_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["south"]
+            elif e_w_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["east"]
+            elif e_w_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["west"]
+            else:
+                nxt = None
+
+        # If policy is 'street', then we will continue walking E/W until we hit the destination avenue, then turn
+        if self.policy == "street":
+            if e_w_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["east"]
+            elif e_w_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["west"]
+            elif n_s_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["north"]
+            elif n_s_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["south"]
+            else:
+                nxt = None
+
+        # If policy is 'greedy', then we will take whatever light is available in the direction of our destination
+
         if nxt is None:
             # Stay in place if no neighbor
             self.target = (self.street_idx, self.avenue_idx, self.corner)
         else:
-            self.target = nxt
+            dj, di, new_corner = nxt
+            j = self.street_idx + dj
+            i = self.avenue_idx + di
+            self.target = (j, i, new_corner)
         self.progress = 0.0
 
     def update(self, dt: float, world_time: float):
@@ -260,11 +299,17 @@ class Walker:
                 # If the first letter is different, then it's a north/south crosswalk (ie. street crosswalk)
                 if avenue_light_is_green:
                     # If avenue light is green, street light is red, skip update
+                    # TODO: check policy to change target?
+                    if self.policy == "greedy":
+                        self._set_next_target()
                     return
             elif self.corner[1] != self.target[2][1]:
                 # If the second letter is different, then it's a east/west crosswalk (ie. avenue crosswalk)
                 if not avenue_light_is_green:
+                    if self.policy == "greedy":
+                        self._set_next_target()
                     # If avenue light is not green, skip update
+                    # TODO: check policy to change target?
                     return
             else:
                 raise Exception(f"Bad state, corner transition: {self.corner} -> {self.target[2]}")
@@ -289,9 +334,9 @@ class Walker:
             "x": x,
             "y": y,
             "corner": self.corner,
-            "direction": self.direction,
             "start": (j0, i0, c0),
-            "end": (j1, i1, c1)
+            "end": (j1, i1, c1),
+            "destination": self.destination_corner
         }
 
 

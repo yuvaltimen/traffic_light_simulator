@@ -34,7 +34,7 @@ class Config:
     # Agents
     walker_speed: float = 50.0
     walker_starting_direction: str = "north"
-    walker_starting_corner: str = "nw"
+    walker_starting_corner: str = "sw"
 
     # Runtime
     fps: int = 60

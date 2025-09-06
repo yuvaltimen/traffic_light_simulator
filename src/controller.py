@@ -19,37 +19,34 @@ def run_simulation(cfg):
 
     # Initialize walkers
     walkers = [
-        Walker(
-            walker_id="1",
-            street_idx=0,
-            avenue_idx=0,
-            corner=cfg.walker_starting_corner,
-            direction=cfg.walker_starting_direction,
-            speed=cfg.walker_speed,
-            grid=grid,
-            target=(cfg.num_streets, cfg.num_avenues, "nw"),
-            policy="greedy",
-        ),
+        # Walker(
+        #     walker_id="1",
+        #     street_idx=0,
+        #     avenue_idx=0,
+        #     corner=cfg.walker_starting_corner,
+        #     speed=cfg.walker_speed,
+        #     grid=grid,
+        #     destination_corner=(cfg.num_streets, cfg.num_avenues, "nw"),
+        #     policy="greedy",
+        # ),
         Walker(
             walker_id="2",
             street_idx=0,
             avenue_idx=0,
             corner=cfg.walker_starting_corner,
-            direction=cfg.walker_starting_direction,
             speed=cfg.walker_speed,
             grid=grid,
-            target=(cfg.num_streets, cfg.num_avenues, "nw"),
+            destination_corner=(cfg.num_streets - 1, cfg.num_avenues - 1, "nw"),
             policy="avenue",
         ),
         Walker(
-            walker_id="2",
+            walker_id="3",
             street_idx=0,
             avenue_idx=0,
             corner=cfg.walker_starting_corner,
-            direction=cfg.walker_starting_direction,
             speed=cfg.walker_speed,
             grid=grid,
-            target=(cfg.num_streets, cfg.num_avenues, "nw"),
+            destination_corner=(cfg.num_streets - 1, cfg.num_avenues - 1, "nw"),
             policy="street",
         )
     ]

@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from src.model import CityGrid, SimulationState
 
@@ -27,6 +29,35 @@ Turquoise = (0, 170, 200)
 Lime = (0, 200, 100)
 
 WALKER_COLOR_LIST = [Red, Blue, Green, Orange, Purple, Teal, Pink, Gold, Turquoise, Lime]
+
+
+def time_to_color(dt: float = None) -> tuple[int, int, int]:
+    """
+    Returns an RGB color oscillating smoothly between bright teal and dark blue
+    over a 10-second cycle.
+
+    Parameters:
+        dt (float): time in seconds. If None, uses current time.
+
+    Returns:
+        (r, g, b) tuple with values in [0, 255].
+    """
+    # Normalize time to a value between 0 and 1 over a 10 second period
+    phase = (dt % 10) / 10.0
+
+    # Oscillate with sine wave: goes 0 -> 1 -> 0 over the cycle
+    alpha = 0.5 * (1 - math.cos(2 * math.pi * phase))
+
+    # Define colors
+    teal = (0, 255, 200)
+    dark_blue = (0, 0, 139)
+
+    # Interpolate
+    r = int((1 - alpha) * teal[0] + alpha * dark_blue[0])
+    g = int((1 - alpha) * teal[1] + alpha * dark_blue[1])
+    b = int((1 - alpha) * teal[2] + alpha * dark_blue[2])
+
+    return r, g, b
 
 
 class Viewport:
@@ -120,6 +151,13 @@ class Visualizer:
 
         # Highlight walker segments (corner-to-corner)
         for w in state.walkers:
+
+            # Highlight the destination corner for each walker
+            dj, di, dc = w["destination"]
+            xd, yd = grid.corner_xy(dj, di, dc)
+            sxd, syd = self.viewport.to_screen(xd, yd)
+            pygame.draw.circle(self.screen, time_to_color(state.time), (sxd, syd), 6)
+
             # Get segment start and end coordinates
             j0, i0, c0 = w["start"]
             j1, i1, c1 = w["end"]
