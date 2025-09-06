@@ -4,9 +4,8 @@ Runs a simulation of a walker walking in a grid city from the source to the targ
 Traffic light offset times are uniformly sampled, and run on a scheduled cycle (ie. 20s red, 30s green).
 The walker has a policy of how they want to turn at traffic lights:
 
-- `greedy` policy - will cross the traffic light in front of them if available
-- `avenue` policy - will stay along the avenue until it reaches the correct street
-- `street` policy - will stay along the street until it reaches the correct avenue
+- `avenue` policy - will prefer to stay along the avenue unless it reaches the correct north value or encounters a red light
+- `street` policy - will prefer to cross the avenue first if the avenue light is green 
 
 ## Configuring
 

@@ -7,17 +7,20 @@
 #avenue_crosswalk_length: float = 20.0 -> 60.0
 #avenue_traffic_light_cycle_times: tuple[float, float] = (25.0, 20.0) -> (50.0, 70.0)
 
-for (( street_block_length=200; street_block_length<=1000; street_block_length+=100 ))
+for (( street_block_length=200; street_block_length<=800; street_block_length+=200 ))
     do
       for (( street_crosswalk_length=10; street_crosswalk_length<=50; street_crosswalk_length+=10 ))
       do
-        for (( avenue_block_length=200; avenue_block_length<=1000; avenue_block_length+=100 ))
+        for (( avenue_block_length=200; avenue_block_length<=800; avenue_block_length+=200 ))
         do
           for (( avenue_crosswalk_length=20; avenue_crosswalk_length<=60; avenue_crosswalk_length+=10 ))
           do
             for (( avenue_traffic_light_green_cycle=25; avenue_traffic_light_green_cycle<=50; avenue_traffic_light_green_cycle+=5 ))
             do
-              python run.py --mode statistics --street_block_length $street_block_length --street_crosswalk_length $street_crosswalk_length --avenue_block_length $avenue_block_length --avenue_crosswalk_length $avenue_crosswalk_length --traffic_cycle $avenue_traffic_light_green_cycle,$(($avenue_traffic_light_green_cycle + 5)) >> experiment/experiment_data.jsonl
+              for i in {1..5}  # run 5 trials to give randomness a chance
+              do
+                python run.py --mode statistics --street_block_length $street_block_length --street_crosswalk_length $street_crosswalk_length --avenue_block_length $avenue_block_length --avenue_crosswalk_length $avenue_crosswalk_length --traffic_cycle $avenue_traffic_light_green_cycle,$(($avenue_traffic_light_green_cycle + 5)) >> experiment/experiment_data.jsonl
+              done
             done
           done
         done
