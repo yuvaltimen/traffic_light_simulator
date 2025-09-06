@@ -83,7 +83,7 @@ def run_simulation(cfg):
     elif cfg.output_mode == OutputMode.STATISTICS:
 
         walker_costs = {
-            walker.id: 0
+            walker.policy: 0
             for walker in sim.walkers
         }
 
@@ -92,6 +92,6 @@ def run_simulation(cfg):
             state = sim.step(dt)
             for walker in sim.walkers:
                 if walker.destination_corner != (walker.street_idx, walker.avenue_idx, walker.corner):
-                    walker_costs[walker.id] += dt
+                    walker_costs[walker.policy] += dt
 
         print(walker_costs)
