@@ -41,7 +41,8 @@ def create_traffic_light_grid(num_streets: int, num_avenues: int, cycle_length: 
             traffic light initial offset is in its cycle, (ie. 1.2s means when the simulation
             starts, this intersection will begin 1.2s into its cycle)
     """
-    random.seed(rndm_seed)
+    if rndm_seed:
+        random.seed(rndm_seed)
     d = dict()
     for x in range(num_avenues):
         for y in range(num_streets):
@@ -59,7 +60,7 @@ class CityGrid:
         avenue_block_length: float,
         avenue_crosswalk_length: float,
         avenue_traffic_light_cycle_times: tuple[float, float],
-        traffic_light_grid_random_seed: int,
+        traffic_light_grid_random_seed: int = None,
     ):
         # city size
         self.num_streets = num_streets
@@ -204,7 +205,6 @@ class Walker:
         self.destination_corner = destination_corner
         self.target = None
         self._set_next_target(world_time=0)
-        print(self.target)
 
     def _neighbor(self) -> Optional[Tuple[int, int, str]]:
         """Return the next corner and its indices along current direction"""

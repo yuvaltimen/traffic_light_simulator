@@ -8,6 +8,18 @@ The walker has a policy of how they want to turn at traffic lights:
 - `avenue` policy - will stay along the avenue until it reaches the correct street
 - `street` policy - will stay along the street until it reaches the correct avenue
 
+## Configuring
+
+All the simulation configs are located at `src/config.py`. 
+Most configs are self-explanatory, but the most important one is the `output_mode`, 
+which may warrant some explanation. 
+
+The `output_mode` config controls what type of 
+simulation is run. If you want to visually see everything, select `PYGAME`, if you 
+want to output the state of the simulation at each timestep, select `JSON`, and if 
+you want to see the costs for each of our walkers after the whole simulation has 
+run, select `STATISTICS`.
+
 ## Running Locally
 
 To run the simulation yourself, follow the instructions below.

@@ -5,13 +5,14 @@ from enum import Enum
 class OutputMode(str, Enum):
     JSON = "json"
     PYGAME = "pygame"
+    STATISTICS = "statistics"
     NONE = "none"   # headless (model only, no output)
 
 
 @dataclass
 class Config:
     # Visualization
-    output_mode: OutputMode = OutputMode.PYGAME
+    output_mode: OutputMode = OutputMode.STATISTICS
     screen_width: int = 800
     screen_height: int = 800
     frame_rate: int = 60
