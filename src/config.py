@@ -32,7 +32,7 @@ class Config:
     traffic_light_grid_random_seed: int = 42
 
     # Agents
-    walker_speed: float = 50.0
+    walker_speed: float = 60.0
     walker_starting_direction: str = "north"
     walker_starting_corner: str = "sw"
 

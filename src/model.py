@@ -203,7 +203,7 @@ class Walker:
         self.progress = 0.0
         self.destination_corner = destination_corner
         self.target = None
-        self._set_next_target()
+        self._set_next_target(world_time=0)
         print(self.target)
 
     def _neighbor(self) -> Optional[Tuple[int, int, str]]:
@@ -215,7 +215,7 @@ class Walker:
                 return j, i, new_corner
         return None
 
-    def _set_next_target(self):
+    def _set_next_target(self, world_time: float):
         nxt = None
         # Choose the next location based on the walker's policy
         # First, need to find directions required to reach destination
@@ -270,6 +270,34 @@ class Walker:
                 nxt = None
 
         # If policy is 'greedy', then we will take whatever light is available in the direction of our destination
+        if self.policy == "greedy":
+            intersection_traffic_light_offset = self.grid.traffic_light_grid[(self.avenue_idx, self.street_idx)]
+            avenue_light_is_green = ((world_time + intersection_traffic_light_offset)
+                                     % self.grid.traffic_light_cycle_length
+                                     > self.grid.avenue_traffic_light_cycle_times[0])
+
+            if avenue_light_is_green:
+                if e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                elif n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                else:
+                    nxt = None
+            elif not avenue_light_is_green:
+                if n_s_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["north"]
+                elif n_s_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["south"]
+                elif e_w_axis == +1:
+                    nxt = _CORNER_DELTAS[self.corner]["east"]
+                elif e_w_axis == -1:
+                    nxt = _CORNER_DELTAS[self.corner]["west"]
+                else:
+                    nxt = None
 
         if nxt is None:
             # Stay in place if no neighbor
@@ -282,6 +310,10 @@ class Walker:
         self.progress = 0.0
 
     def update(self, dt: float, world_time: float):
+
+        if self.target == (self.street_idx, self.avenue_idx, self.corner):
+            # If the walker reached their corner, we're done, no updates to do
+            return
 
         # Need to check if traffic light is green before crossing
         if (self.target[0] == self.street_idx
@@ -301,15 +333,15 @@ class Walker:
                     # If avenue light is green, street light is red, skip update
                     # TODO: check policy to change target?
                     if self.policy == "greedy":
-                        self._set_next_target()
+                        self._set_next_target(world_time=world_time)
                     return
             elif self.corner[1] != self.target[2][1]:
                 # If the second letter is different, then it's a east/west crosswalk (ie. avenue crosswalk)
                 if not avenue_light_is_green:
-                    if self.policy == "greedy":
-                        self._set_next_target()
                     # If avenue light is not green, skip update
                     # TODO: check policy to change target?
+                    if self.policy == "greedy":
+                        self._set_next_target(world_time=world_time)
                     return
             else:
                 raise Exception(f"Bad state, corner transition: {self.corner} -> {self.target[2]}")
@@ -320,7 +352,7 @@ class Walker:
         if self.progress >= 1.0:
             # Snap to target corner
             self.street_idx, self.avenue_idx, self.corner = self.target
-            self._set_next_target()
+            self._set_next_target(world_time=world_time)
 
     def to_state(self):
         j0, i0, c0 = self.street_idx, self.avenue_idx, self.corner

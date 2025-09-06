@@ -173,4 +173,4 @@ class Visualizer:
 
             # Draw walkers on top of segments
             px, py = self.viewport.to_screen(w["x"], w["y"])
-            pygame.draw.circle(self.screen, walker_color, (px, py), 8)
+            pygame.draw.circle(self.screen, walker_color, (px, py), 8 - int(w["id"]))
