@@ -34,5 +34,5 @@ To run the simulation yourself, follow the instructions below.
 ```bash
 >> pip install -r requirements.txt
 ``` 
-3. Go to `run.py` at the root level, and click run.
-4. To update configurations, pass in flags to override the default config values.
+3. Invoke the program from the root level by running `python run.py`
+4. To update configurations, pass in flags to override the default config values. For example: `python run.py --mode statistics --walker_speed 30.5`
