@@ -47,8 +47,6 @@ def main():
     cfg.walker_speed = args.walker_speed
     cfg.walker_starting_corner = args.walker_starting_corner
 
-    print(cfg)
-
     run_simulation(cfg)
 
 

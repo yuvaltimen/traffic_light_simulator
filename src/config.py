@@ -30,7 +30,7 @@ class Config:
     #
     #                                         green, red
     avenue_traffic_light_cycle_times: tuple[float, float] = (15.0, 20.0)
-    traffic_light_grid_random_seed: int = 42
+    traffic_light_grid_random_seed: int = None
 
     # Agents
     walker_speed: float = 60.0

@@ -1,3 +1,7 @@
+from os import environ
+# Suppresses the message: 'Hello from the pygame community.' on startup
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 import pygame
 
 from src.config import OutputMode
