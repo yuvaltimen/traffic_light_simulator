@@ -28,7 +28,7 @@ for (( street_block_length=200; street_block_length<=800; street_block_length+=2
                     else
                       val=-5
                     fi
-                    python run.py --mode statistics --street_block_length $street_block_length --street_crosswalk_length $street_crosswalk_length --avenue_block_length $avenue_block_length --avenue_crosswalk_length $avenue_crosswalk_length --traffic_cycle $avenue_traffic_light_green_cycle,$(($avenue_traffic_light_green_cycle + $val)) >> experiment/experiment_data.jsonl
+                    python run.py --mode statistics --street_block_length $street_block_length --street_crosswalk_length $street_crosswalk_length --avenue_block_length $avenue_block_length --avenue_crosswalk_length $avenue_crosswalk_length --traffic_cycle $avenue_traffic_light_green_cycle,$(($avenue_traffic_light_green_cycle + $val)) >> experiment/both_biases_experiment.jsonl
                   done
                 done
               done

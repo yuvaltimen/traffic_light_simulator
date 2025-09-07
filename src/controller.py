@@ -79,7 +79,7 @@ def run_simulation(cfg):
     elif cfg.output_mode == OutputMode.STATISTICS:
 
         walker_costs = {
-            walker.policy: 0
+            f"{walker.policy}_policy": 0
             for walker in sim.walkers
         }
 
@@ -88,6 +88,21 @@ def run_simulation(cfg):
             sim.step(dt)
             for walker in sim.walkers:
                 if walker.destination_corner != (walker.street_idx, walker.avenue_idx, walker.corner):
-                    walker_costs[walker.policy] += dt
+                    walker_costs[f"{walker.policy}_policy"] += dt
 
-        print(walker_costs)
+
+
+
+        print(walker_costs | {
+            "num_streets": cfg.num_streets,
+            "num_avenues": cfg.num_avenues,
+            "street_block_length": cfg.street_block_length,
+            "street_crosswalk_length": cfg.street_crosswalk_length,
+            "avenue_block_length": cfg.avenue_block_length,
+            "avenue_crosswalk_length": cfg.avenue_crosswalk_length,
+            "avenue_traffic_light_cycle_green_time": cfg.avenue_traffic_light_cycle_times[0],
+            "avenue_traffic_light_cycle_red_time": cfg.avenue_traffic_light_cycle_times[1],
+            "traffic_light_grid_random_seed": cfg.traffic_light_grid_random_seed,
+            "walker_speed": cfg.walker_speed,
+            "walker_starting_corner": cfg.walker_starting_corner
+        })
