@@ -1,3 +1,4 @@
+import json
 from os import environ
 
 # Suppresses the message: 'Hello from the pygame community.' on startup
@@ -93,7 +94,7 @@ def run_simulation(cfg):
 
 
 
-        print(walker_costs | {
+        print(json.dumps(walker_costs | {
             "num_streets": cfg.num_streets,
             "num_avenues": cfg.num_avenues,
             "street_block_length": cfg.street_block_length,
@@ -105,4 +106,4 @@ def run_simulation(cfg):
             "traffic_light_grid_random_seed": cfg.traffic_light_grid_random_seed,
             "walker_speed": cfg.walker_speed,
             "walker_starting_corner": cfg.walker_starting_corner
-        })
+        }))

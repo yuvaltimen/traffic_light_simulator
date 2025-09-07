@@ -17,10 +17,10 @@ for (( street_block_length=200; street_block_length<=800; street_block_length+=2
           for (( avenue_crosswalk_length=20; avenue_crosswalk_length<=60; avenue_crosswalk_length+=10 ))
           do
             for (( avenue_traffic_light_green_cycle=25; avenue_traffic_light_green_cycle<=50; avenue_traffic_light_green_cycle+=5 ))
+            do
               for light_bias in {1..2}
               do
-                do
-                  for _ in {1..5}  # run 5 trials to give randomness a chance
+                for _ in {1..5}  # run 5 trials to give randomness a chance
                   do
                     # get both the slight red and slightly green bias (+/- 5 seconds)
                     if [[ $light_bias -eq 1 ]]; then
