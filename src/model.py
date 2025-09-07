@@ -243,58 +243,22 @@ class Walker:
         # If policy is 'avenue', then we will continue walking N/S until we hit the destination street or a red light, then turn
         if self.policy == "avenue":
 
+            # =============================================
+            #         Prefer walking along the avenue
+            # =============================================
             if n_s_axis == +1 and self.corner[0] == "n":
                 nxt = _CORNER_DELTAS[self.corner]["north"]
             elif n_s_axis == -1 and self.corner[0] == "s":
                 nxt = _CORNER_DELTAS[self.corner]["south"]
-            elif avenue_light_is_green:
-                if e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                elif n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                else:
-                    nxt = None
-            elif not avenue_light_is_green:
-                if n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                elif e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                else:
-                    nxt = None
+            # =============================================
+
+            else:
+                nxt = self._next_target_default(avenue_light_is_green, n_s_axis, e_w_axis)
 
         # If policy is 'street', then we will take the opportunity to cross the avenue along the street if it's green
         if self.policy == "street":
 
-            if avenue_light_is_green:
-                if e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                elif n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                else:
-                    nxt = None
-            elif not avenue_light_is_green:
-                if n_s_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["north"]
-                elif n_s_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["south"]
-                elif e_w_axis == +1:
-                    nxt = _CORNER_DELTAS[self.corner]["east"]
-                elif e_w_axis == -1:
-                    nxt = _CORNER_DELTAS[self.corner]["west"]
-                else:
-                    nxt = None
+            nxt = self._next_target_default(avenue_light_is_green, n_s_axis, e_w_axis)
 
         if nxt is None:
             # Stay in place if no neighbor
@@ -305,6 +269,32 @@ class Walker:
             i = self.avenue_idx + di
             self.target = (j, i, new_corner)
         self.progress = 0.0
+
+    def _next_target_default(self, avenue_light_is_green, n_s_axis, e_w_axis) -> tuple[int, int, str]:
+        nxt = None
+        if avenue_light_is_green:
+            if e_w_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["east"]
+            elif e_w_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["west"]
+            elif n_s_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["north"]
+            elif n_s_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["south"]
+            else:
+                nxt = None
+        elif not avenue_light_is_green:
+            if n_s_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["north"]
+            elif n_s_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["south"]
+            elif e_w_axis == +1:
+                nxt = _CORNER_DELTAS[self.corner]["east"]
+            elif e_w_axis == -1:
+                nxt = _CORNER_DELTAS[self.corner]["west"]
+            else:
+                nxt = None
+        return nxt
 
     def update(self, dt: float, world_time: float):
 

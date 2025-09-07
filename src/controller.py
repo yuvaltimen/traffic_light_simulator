@@ -1,4 +1,5 @@
 from os import environ
+
 # Suppresses the message: 'Hello from the pygame community.' on startup
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
@@ -59,6 +60,7 @@ def run_simulation(cfg):
         viewport = Viewport(grid.width, grid.height, cfg.screen_width, cfg.screen_height)
         vis = Visualizer(screen, viewport)
         clock = pygame.time.Clock()
+
         running = True
 
         while running:
