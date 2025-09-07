@@ -44,154 +44,137 @@ Using the default configs, the random seeds to use to find differences are:
 - 88
 
 Here are the top runs from experiment that had >5% difference:
-
-street_policy                     82.266667
-avenue_policy                     69.966667
-num_streets                               5
-num_avenues                               6
-street_block_length                     200
-street_crosswalk_length                  10
-avenue_block_length                     200
-avenue_crosswalk_length                  20
-green_time                               25
-red_time                                 20
-traffic_light_grid_random_seed          NaN
-walker_speed                             60
-walker_starting_corner                   sw
-Name: 6, dtype: object
-
-street_policy                      69.966667
-avenue_policy                     105.033333
-num_streets                                5
-num_avenues                                6
-street_block_length                      200
-street_crosswalk_length                   10
-avenue_block_length                      200
-avenue_crosswalk_length                   20
-green_time                                40
-red_time                                  35
-traffic_light_grid_random_seed           NaN
-walker_speed                              60
-walker_starting_corner                    sw
-Name: 18, dtype: object
-
-street_policy                     85.066667
-avenue_policy                          82.2
-num_streets                               5
-num_avenues                               6
-street_block_length                     200
-street_crosswalk_length                  10
-avenue_block_length                     200
-avenue_crosswalk_length                  40
-green_time                               25
-red_time                                 30
-traffic_light_grid_random_seed          NaN
-walker_speed                             60
-walker_starting_corner                   sw
-Name: 23, dtype: object
-
-street_policy                          76.3
-avenue_policy                     94.716667
-num_streets                               5
-num_avenues                               6
-street_block_length                     200
-street_crosswalk_length                  10
-avenue_block_length                     200
-avenue_crosswalk_length                  40
-green_time                               25
-red_time                                 20
-traffic_light_grid_random_seed          NaN
-walker_speed                             60
-walker_starting_corner                   sw
-Name: 25, dtype: object
-
-street_policy                     92.266667
-avenue_policy                     81.383333
-num_streets                               5
-num_avenues                               6
-street_block_length                     200
-street_crosswalk_length                  10
-avenue_block_length                     200
-avenue_crosswalk_length                  40
-green_time                               40
-red_time                                 35
-traffic_light_grid_random_seed          NaN
-walker_speed                             60
-walker_starting_corner                   sw
-Name: 38, dtype: object
-
-street_policy                     93.8
-avenue_policy                     98.9
+street_policy                     66.8
+avenue_policy                     73.3
 num_streets                          5
 num_avenues                          6
 street_block_length                200
 street_crosswalk_length             10
 avenue_block_length                200
-avenue_crosswalk_length             60
-green_time                          25
-red_time                            20
-traffic_light_grid_random_seed     NaN
+avenue_crosswalk_length             10
+green_time                          10
+red_time                            15
+traffic_light_grid_random_seed      59
 walker_speed                        60
 walker_starting_corner              sw
-Name: 47, dtype: object
+Name: 4, dtype: object
 
-street_policy                      82.633333
-avenue_policy                     102.616667
+street_policy                     69.766667
+avenue_policy                         87.95
+num_streets                               5
+num_avenues                               6
+street_block_length                     200
+street_crosswalk_length                  10
+avenue_block_length                     200
+avenue_crosswalk_length                  10
+green_time                               15
+red_time                                 10
+traffic_light_grid_random_seed           94
+walker_speed                             60
+walker_starting_corner                   sw
+Name: 5, dtype: object
+
+street_policy                         127.65
+avenue_policy                     114.766667
 num_streets                                5
 num_avenues                                6
 street_block_length                      200
 street_crosswalk_length                   10
 avenue_block_length                      200
-avenue_crosswalk_length                   60
-green_time                                40
-red_time                                  35
-traffic_light_grid_random_seed           NaN
+avenue_crosswalk_length                   10
+green_time                                55
+red_time                                  50
+traffic_light_grid_random_seed            21
 walker_speed                              60
 walker_starting_corner                    sw
-Name: 58, dtype: object
+Name: 27, dtype: object
 
-street_policy                         174.75
-avenue_policy                     179.216667
+street_policy                     84.233333
+avenue_policy                     73.133333
+num_streets                               5
+num_avenues                               6
+street_block_length                     200
+street_crosswalk_length                  10
+avenue_block_length                     200
+avenue_crosswalk_length                  30
+green_time                               10
+red_time                                 15
+traffic_light_grid_random_seed           88
+walker_speed                             60
+walker_starting_corner                   sw
+Name: 34, dtype: object
+
+street_policy                         269.15
+avenue_policy                     310.216667
 num_streets                                5
 num_avenues                                6
-street_block_length                      200
-street_crosswalk_length                   10
-avenue_block_length                      500
-avenue_crosswalk_length                   20
-green_time                                25
-red_time                                  30
-traffic_light_grid_random_seed           NaN
+street_block_length                      800
+street_crosswalk_length                   50
+avenue_block_length                      800
+avenue_crosswalk_length                   50
+green_time                                30
+red_time                                  25
+traffic_light_grid_random_seed            15
 walker_speed                              60
 walker_starting_corner                    sw
-Name: 61, dtype: object
+Name: 2415, dtype: object
 
-street_policy                     164.966667
-avenue_policy                          206.2
+street_policy                         269.15
+avenue_policy                     298.683333
 num_streets                                5
 num_avenues                                6
-street_block_length                      200
-street_crosswalk_length                   10
-avenue_block_length                      500
-avenue_crosswalk_length                   20
+street_block_length                      800
+street_crosswalk_length                   50
+avenue_block_length                      800
+avenue_crosswalk_length                   50
 green_time                                25
 red_time                                  30
-traffic_light_grid_random_seed           NaN
+traffic_light_grid_random_seed            82
 walker_speed                              60
 walker_starting_corner                    sw
-Name: 62, dtype: object
+Name: 2416, dtype: object
 
-street_policy                     170.633333
-avenue_policy                     164.966667
+street_policy                         269.15
+avenue_policy                     308.883333
 num_streets                                5
 num_avenues                                6
-street_block_length                      200
-street_crosswalk_length                   10
-avenue_block_length                      500
-avenue_crosswalk_length                   20
-green_time                                25
-red_time                                  30
-traffic_light_grid_random_seed           NaN
+street_block_length                      800
+street_crosswalk_length                   50
+avenue_block_length                      800
+avenue_crosswalk_length                   50
+green_time                                30
+red_time                                  25
+traffic_light_grid_random_seed            56
 walker_speed                              60
 walker_starting_corner                    sw
-Name: 63, dtype: object
+Name: 2419, dtype: object
 
+street_policy                     301.733333
+avenue_policy                          315.3
+num_streets                                5
+num_avenues                                6
+street_block_length                      800
+street_crosswalk_length                   50
+avenue_block_length                      800
+avenue_crosswalk_length                   50
+green_time                                55
+red_time                                  50
+traffic_light_grid_random_seed            88
+walker_speed                              60
+walker_starting_corner                    sw
+Name: 2421, dtype: object
+
+street_policy                         269.15
+avenue_policy                     349.216667
+num_streets                                5
+num_avenues                                6
+street_block_length                      800
+street_crosswalk_length                   50
+avenue_block_length                      800
+avenue_crosswalk_length                   50
+green_time                                50
+red_time                                  55
+traffic_light_grid_random_seed            15
+walker_speed                              60
+walker_starting_corner                    sw
+Name: 2426, dtype: object

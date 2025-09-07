@@ -92,18 +92,19 @@ def run_simulation(cfg):
                     walker_costs[f"{walker.policy}_policy"] += dt
 
 
-
-
-        print(json.dumps(walker_costs | {
+        ret = json.dumps(walker_costs | {
             "num_streets": cfg.num_streets,
             "num_avenues": cfg.num_avenues,
             "street_block_length": cfg.street_block_length,
             "street_crosswalk_length": cfg.street_crosswalk_length,
             "avenue_block_length": cfg.avenue_block_length,
             "avenue_crosswalk_length": cfg.avenue_crosswalk_length,
-            "avenue_traffic_light_cycle_green_time": cfg.avenue_traffic_light_cycle_times[0],
-            "avenue_traffic_light_cycle_red_time": cfg.avenue_traffic_light_cycle_times[1],
+            "green_time": cfg.avenue_traffic_light_cycle_times[0],
+            "red_time": cfg.avenue_traffic_light_cycle_times[1],
             "traffic_light_grid_random_seed": cfg.traffic_light_grid_random_seed,
             "walker_speed": cfg.walker_speed,
             "walker_starting_corner": cfg.walker_starting_corner
-        }))
+        })
+
+        print(ret)
+        return ret
