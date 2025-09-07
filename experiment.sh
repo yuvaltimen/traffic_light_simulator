@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
 
 # Experiment to grid search across parameters
-#street_block_length: 200.0 -> 1000.0
-#street_crosswalk_length: float = 10.0 -> 50.0
-#avenue_block_length: float = 200.0 -> 1000.0
-#avenue_crosswalk_length: float = 20.0 -> 60.0
-#avenue_traffic_light_cycle_times: tuple[float, float] = (25.0, 20.0) -> (50.0, 70.0)
+#street_block_length: 200, 500, 800
+#avenue_block_length: 200, 500, 800
+
+#street_crosswalk_length: 10, 30, 50
+#avenue_crosswalk_length: 10, 30, 50
+
+#avenue_traffic_light_cycle_times: (25, 30), (25, 20), (40, 45), (45, 32), (55, 50), (55, 60),
 
 
-for (( street_block_length=200; street_block_length<=800; street_block_length+=200 ))
+
+for (( street_block_length=200; street_block_length<=800; street_block_length+=300 ))
     do
-      for (( street_crosswalk_length=10; street_crosswalk_length<=50; street_crosswalk_length+=10 ))
+      for (( street_crosswalk_length=10; street_crosswalk_length<=50; street_crosswalk_length+=20 ))
       do
-        for (( avenue_block_length=200; avenue_block_length<=800; avenue_block_length+=200 ))
+        for (( avenue_block_length=200; avenue_block_length<=800; avenue_block_length+=300 ))
         do
-          for (( avenue_crosswalk_length=20; avenue_crosswalk_length<=60; avenue_crosswalk_length+=10 ))
+          for (( avenue_crosswalk_length=20; avenue_crosswalk_length<=60; avenue_crosswalk_length+=20 ))
           do
-            for (( avenue_traffic_light_green_cycle=25; avenue_traffic_light_green_cycle<=50; avenue_traffic_light_green_cycle+=5 ))
+            for (( avenue_traffic_light_green_cycle=25; avenue_traffic_light_green_cycle<=50; avenue_traffic_light_green_cycle+=15 ))
             do
               for light_bias in {1..2}
               do

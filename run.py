@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument("--avenue_crosswalk_length", type=float, default=40.0, help="Avenue crosswalk length in meters")
 
     parser.add_argument("--traffic_cycle", type=str, default="15.0,20.0", help="Comma separated pair of floats denoting traffic cycle times (ie. '20.0,30.0' denotes 20s green and 30s red)")
-    parser.add_argument("--random_seed", type=int, default=42, help="Random seed for controlling simulation")
+    parser.add_argument("--random_seed", type=int, help="Random seed for controlling simulation")
 
     parser.add_argument("--walker_speed", type=float, default=60.0, help="Walker speed in m/s")
     parser.add_argument("--walker_starting_corner", type=str, default="sw", choices=["nw", "sw", "ne", "se"], help="Street corner that the walker starts at")
